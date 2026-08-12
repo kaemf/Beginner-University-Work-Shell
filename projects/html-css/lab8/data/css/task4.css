@@ -1,0 +1,44 @@
+body{
+    margin: 0
+}
+
+.header{
+ background-color: #35F0FF;
+ width: 100%;
+}
+
+.aside-1{
+ background-color: plum;
+ min-width: 120px;
+ flex-grow: 1;
+}
+
+.aside-2{
+ background-color: yellow;
+ min-width: 120px;
+ flex-grow: 1;
+}
+
+.text{
+ background-color: #89a261;
+ text-align: justify;
+ width: 60%;
+ flex-grow: 1;
+}
+
+.footer{
+ background-color: blue;
+ width: 100%;
+}
+
+.container-1{
+ text-align: center;
+ display: flex;
+ flex-direction: row;
+ flex-wrap: wrap;
+}
+
+.container-1 > div{
+ margin: 0;
+ padding: 10px;
+}

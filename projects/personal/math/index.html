@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Menu</title>
+
+    <link rel="stylesheet" href="./data/assets/main.css">
+</head>
+<body>
+
+    <div class="title"><div class="title-name"></div></div>
+
+    <div class="exit-btn"></div>
+
+    <div class="user">
+        <div class="l-line"></div><div class="up-line"></div>
+        <div class="st-up-l-c"></div><div class="end-up-l-c"></div>
+            <div class="first-choose">
+                <div class="img-f"></div>
+                <div class="text-f"></div>
+            </div>
+            <div class="second-choose">
+                <div class="img-s"></div>
+                <div class="text-s"></div>
+            </div>
+            <div class="third-choose">
+                <div class="img-t"></div>
+                <div class="text-t"></div>
+            </div>
+            <div class="fourth-choose">
+                <div class="img-fo"></div>
+                <div class="text-fo"></div>
+            </div>
+        <div class="st-down-l-c"></div><div class="end-down-l-c"></div>
+        <div class="r-line"></div><div class="down-line"></div>
+    </div>
+
+    <div class="dev">
+        <div class="circle-task" style="visibility: hidden; opacity: 0;">
+            <div class="circle-title"></div>
+
+            <div class="c-radius-name"></div><div class="c-radius-input"><input maxlength="15" placeholder="3" onkeyup="Correct(this);" class="c-radius-input-in" type="text"></div>
+
+            <div class="c-diametr-name"></div><div class="c-diametr-out"><div class="diametr-c-out"></div></div>
+            <div class="c-dovzhina-name"></div><div class="c-dovzhina-out"><div class="dovzhina-c-out"></div></div>
+            <div class="c-plos-name"></div><div class="c-radius-out"><div class="plos-c-out"></div></div>
+
+            <div class="button-s-c"><div class="button-s-c-name"></div></div>
+        </div>
+
+        <div class="square-task" style="visibility: hidden; opacity: 0;">
+            <div class="square-title"></div>
+
+            <div class="sq-side-name"></div><div class="sq-side-input"><input maxlength="15" placeholder="5" onkeyup="Correct(this);" class="sq-side-input-in" type="text"></div>
+
+            <div class="sq-plos-name"></div><div class="sq-plos-out"><div class="plos-sq-out"></div></div>
+            <div class="sq-diag-name"></div><div class="sq-diag-out"><div class="diag-sq-out"></div></div>
+            <div class="sq-radin-name"></div><div class="sq-radin-out"><div class="radin-sq-out"></div></div>
+            <div class="sq-per-name"></div><div class="sq-per-out"><div class="per-sq-out"></div></div>
+            <div class="sq-radout-name"></div><div class="sq-radout-out"><div class="radout-sq-out"></div></div>
+
+            <div class="button-s-sq"><div class="button-s-sq-name"></div></div>
+        </div>
+
+        <div class="rectangle-task" style="visibility: hidden; opacity: 0;">
+            <div class="rectangle-title"></div>
+
+            <div class="rect-sidea-name"></div><div class="rect-sidea-input"><input placeholder="3" maxlength="15" onkeyup="Correct(this);" class="rect-sidea-input-in" type="text"></div>
+            <div class="rect-sideb-name"></div><div class="rect-sideb-input"><input placeholder="4" maxlength="15" onkeyup="Correct(this);" class="rect-sideb-input-in" type="text"></div>
+
+            <div class="rect-plos-name"></div><div class="rect-plos-out"><div class="plos-rect-out"></div></div>
+            <div class="rect-diag-name"></div><div class="rect-diag-out"><div class="diag-rect-out"></div></div>
+            <div class="rect-cuta-name"></div><div class="rect-cuta-out"><div class="cuta-rect-out"></div></div>
+            <div class="rect-per-name"></div><div class="rect-per-out"><div class="per-rect-out"></div></div>
+            <div class="rect-cutb-name"></div><div class="rect-cutb-out"><div class="cutb-rect-out"></div></div>
+
+            <div class="button-s-rect"><div class="button-s-rect-name"></div></div>
+        </div>
+
+        <div class="triangle-task" style="visibility: hidden; opacity: 0;">
+            <div class="triangle-title"></div>
+
+            <div class="tr-sidea-name"></div><div class="tr-sidea-input"><input placeholder="3" maxlength="15" onkeyup="Correct(this);" class="tr-sidea-input-in" type="text"></div>
+            <div class="tr-sideb-name"></div><div class="tr-sideb-input"><input placeholder="4" maxlength="15" onkeyup="Correct(this);" class="tr-sideb-input-in" type="text"></div>
+            <div class="tr-sidec-name"></div><div class="tr-sidec-input"><input placeholder="5" maxlength="15" onkeyup="Correct(this);" class="tr-sidec-input-in" type="text"></div>
+
+            <div class="tr-plos-name"></div><div class="tr-plos-out"><div class="plos-tr-out"></div></div>
+            <div class="tr-radin-name"></div><div class="tr-radin-out"><div class="radin-tr-out"></div></div>
+            <div class="tr-per-name"></div><div class="tr-per-out"><div class="per-tr-out"></div></div>
+            <div class="tr-radout-name"></div><div class="tr-radout-out"><div class="radout-tr-out"></div></div>
+
+            <div class="button-s-tr"><div class="button-s-tr-name"></div></div>
+        </div>
+    </div>
+
+    <script src="./data/script/calc.js"></script>
+</body>
+</html>

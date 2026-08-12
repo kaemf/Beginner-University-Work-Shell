@@ -1,0 +1,1037 @@
+/* ============================================================
+   Beginner University Work Shell
+   Контрольний лист архіву: опис ліворуч, аркуш зразків праворуч.
+   ============================================================ */
+
+:root {
+  /* архівний папір — холодний, із зеленуватим ухилом, не крем */
+  --paper:     #e7e7e1;
+  --print:     #fcfbf8;
+  --ink:       #14171a;
+  --ink-2:     #585f66;
+  --ink-3:     #8b9198;
+  --rule:      #c6c7c0;
+  --rule-soft: #d9d9d3;
+  --stamp:     #5b3e8e;
+  --stamp-bg:  rgba(91, 62, 142, 0.09);
+
+  --serif: "Hoefler Text", "Iowan Old Style", Charter, Georgia, "Times New Roman", serif;
+  --sans:  "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --mono:  "Cascadia Mono", "SF Mono", "Roboto Mono", Consolas, "Liberation Mono", monospace;
+
+  --rail: 232px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:     #131519;
+    --print:     #1b1e24;
+    --ink:       #e8e9ec;
+    --ink-2:     #969da6;
+    --ink-3:     #6d747c;
+    --rule:      #2b3038;
+    --rule-soft: #23272e;
+    --stamp:     #ae92e8;
+    --stamp-bg:  rgba(174, 146, 232, 0.13);
+  }
+}
+
+:root[data-theme="light"] {
+  --paper: #e7e7e1; --print: #fcfbf8; --ink: #14171a; --ink-2: #585f66;
+  --ink-3: #8b9198; --rule: #c6c7c0; --rule-soft: #d9d9d3;
+  --stamp: #5b3e8e; --stamp-bg: rgba(91, 62, 142, 0.09);
+}
+
+:root[data-theme="dark"] {
+  --paper: #131519; --print: #1b1e24; --ink: #e8e9ec; --ink-2: #969da6;
+  --ink-3: #6d747c; --rule: #2b3038; --rule-soft: #23272e;
+  --stamp: #ae92e8; --stamp-bg: rgba(174, 146, 232, 0.13);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 15px/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 2px;
+}
+
+/* ---- спільні типографічні ролі ---- */
+
+.meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.shell {
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ============ Шапка ============ */
+
+.masthead {
+  border-bottom: 1px solid var(--ink);
+  padding: 40px 0 18px;
+}
+
+.masthead-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(28px, 4.2vw, 42px);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+  max-width: 15ch;
+}
+
+.masthead-side {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.colophon {
+  text-align: right;
+  line-height: 1.9;
+}
+
+.colophon b { color: var(--ink-2); font-weight: 500; }
+
+.theme-toggle {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: 0;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.theme-toggle:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Кнопки мови й теми стоять парою, тому одного зросту й в одну колодку. */
+.masthead-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.lang-toggle {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  border-radius: 0;
+  height: 34px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.lang-toggle:hover { border-color: var(--ink); color: var(--ink); }
+
+.standfirst {
+  margin: 20px 0 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+/* ============ Каркас: опис + аркуш ============ */
+
+.layout {
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 48px;
+  align-items: start;
+  /* тільки вертикальні відступи: горизонтальні задає .shell,
+     а скорочений padding їх би перекрив */
+  padding-top: 34px;
+  padding-bottom: 72px;
+}
+
+.finding-aid {
+  position: sticky;
+  top: 26px;
+}
+
+.aid-title {
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.aid-list { list-style: none; margin: 0; padding: 0; }
+
+.aid-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  padding: 7px 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.aid-item:hover { color: var(--ink); }
+
+.aid-item[aria-pressed="true"] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.aid-item[aria-pressed="true"] .aid-tally {
+  background: var(--stamp);
+  color: var(--print);
+  border-color: var(--stamp);
+}
+
+.aid-tally {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  padding: 1px 6px;
+  min-width: 26px;
+  text-align: center;
+}
+
+.aid-foot {
+  margin-top: 22px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  line-height: 1.85;
+}
+
+.aid-foot a { color: var(--stamp); text-decoration: none; }
+.aid-foot a:hover { text-decoration: underline; }
+
+/* ============ Аркуш зразків ============ */
+
+.sheet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 34px 26px;
+  min-width: 0;
+}
+
+.specimen {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Рамка з живим рендером. Знімок сидить у паспарту: без нього біла сторінка
+   на світлій темі зливається з аркушем і межа кадру не читається. */
+.plate {
+  position: relative;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  padding: 7px;
+  transition: border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+
+.plate-window {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--print);
+  box-shadow: inset 0 0 0 1px var(--rule-soft);
+}
+
+.specimen:hover .plate {
+  border-color: var(--stamp);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(16, 18, 22, 0.13);
+}
+
+.specimen:hover h2 { color: var(--stamp); }
+
+/* Номер роботи — як крайовий друк на контрольному аркуші. Стоїть лише там, де
+   він справжній: у лабораторних є шифр, в особистих проєктах його немає. */
+.plate-no {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  background: var(--paper);
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 3px 9px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.plate iframe {
+  border: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+  background: #fff;
+  display: block;
+}
+
+.plate-skeleton {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+/* плашка для консольних проєктів — замість рендера показуємо склад теки */
+.plate-files {
+  position: absolute;
+  inset: 0;
+  padding: 18px 20px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.95;
+  color: var(--ink-3);
+  overflow: hidden;
+}
+
+.plate-files span { display: block; }
+.plate-files span:nth-child(-n + 3) { color: var(--ink-2); }
+
+/* штемпель у кутку рамки */
+.plate-stamp {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background: var(--print);
+  border-top: 1px solid var(--rule);
+  border-left: 1px solid var(--rule);
+  padding: 4px 9px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--stamp);
+}
+
+/* Колонка, щоб нижній рядок притискався до низу: описи різної довжини інакше
+   роблять ряд карток рваним. */
+.caption {
+  padding-top: 13px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.caption-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 7px;
+  margin-bottom: 9px;
+}
+
+.caption h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.24;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.caption p {
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  line-height: 1.62;
+  color: var(--ink-2);
+}
+
+.caption-foot {
+  margin-top: auto;
+  padding-top: 12px;
+  display: flex;
+  gap: 8px 16px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.caption-foot .tech { display: flex; gap: 6px; flex-wrap: wrap; }
+.caption-foot .dot { color: var(--rule); }
+.caption-foot .count { flex: 0 0 auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ============ Перегляд ============ */
+
+.plateview {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+}
+
+.plateview[hidden] { display: none; }
+
+.pv-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 13px 24px;
+  border-bottom: 1px solid var(--ink);
+  flex-wrap: wrap;
+}
+
+.pv-back {
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.pv-back:hover { color: var(--stamp); }
+
+.pv-heading {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pv-heading h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+}
+
+.pv-acts { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.act {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  padding: 6px 13px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.act:hover { border-color: var(--stamp); color: var(--stamp); }
+
+/* ---- перемикач версій сторінки: теперішня / знімок оригіналу ---- */
+
+.pv-variant { display: flex; border: 1px solid var(--rule); }
+.pv-variant:empty { display: none; }
+
+.pv-variant button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-3);
+  padding: 6px 13px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pv-variant button + button { border-left: 1px solid var(--rule); }
+.pv-variant button:hover { color: var(--stamp); }
+
+.pv-variant button[aria-pressed="true"] {
+  background: var(--stamp-bg);
+  color: var(--stamp);
+  cursor: default;
+}
+
+.pv-body { flex: 1; display: flex; min-height: 0; }
+
+.pv-index {
+  width: 258px;
+  flex: 0 0 258px;
+  border-right: 1px solid var(--rule);
+  overflow-y: auto;
+  padding: 22px 20px;
+}
+
+.pv-index:empty { display: none; }
+
+.pv-body.side-hidden .pv-index { display: none; }
+
+.pv-side-toggle {
+  flex: 0 0 auto;
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  width: 30px;
+  height: 28px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pv-side-toggle[hidden] { display: none; }
+.pv-side-toggle:hover { border-color: var(--stamp); color: var(--stamp); }
+.pv-side-toggle[aria-expanded="false"] { background: var(--stamp-bg); border-color: var(--stamp); color: var(--stamp); }
+
+.pv-index-title {
+  margin: 0 0 12px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.pv-index-title + .leaf { margin-top: 0; }
+.pv-index-title:not(:first-child) { margin-top: 26px; }
+
+/* ---- нотатка та історія як окремі розділи ---- */
+
+.panel { padding: 30px 34px 60px; max-width: 74ch; margin: 0 auto; }
+
+.panel .lead {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 26px;
+  padding-left: 18px;
+  border-left: 2px solid var(--stamp);
+}
+
+.timeline { list-style: none; margin: 0; padding: 0; }
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.timeline .when {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--stamp);
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+}
+
+.timeline .what { font-size: 14px; line-height: 1.55; }
+.timeline li.archive .when { color: var(--ink-3); }
+
+@media (max-width: 640px) {
+  .timeline li { grid-template-columns: 1fr; gap: 3px; }
+  .panel { padding: 22px 20px 50px; }
+}
+
+.leaf {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  padding: 7px 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.leaf:hover { color: var(--ink); }
+.leaf[aria-current="true"] { color: var(--stamp); font-weight: 600; }
+
+.leaf-file {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.leaf[aria-current="true"] .leaf-file { color: var(--stamp); }
+
+.pv-note {
+  margin: 20px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--ink-3);
+}
+
+.pv-stage {
+  flex: 1;
+  min-width: 0;
+  background: var(--print);
+  position: relative;
+  overflow: auto;
+}
+
+.pv-stage > iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #fff;
+}
+
+/* Смужка над знімком оригіналу: без неї не зрозуміло, чому сторінка розсипана. */
+
+.pv-stage.with-note { display: flex; flex-direction: column; }
+.pv-stage.with-note > iframe { height: auto; flex: 1; min-height: 0; }
+
+.stage-note {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 11px 24px 12px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--stamp-bg);
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.stage-note .meta {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--stamp);
+}
+
+/* ---- панель вихідників ---- */
+
+.dossier {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.dossier-lead {
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.55;
+  margin: 0 0 30px;
+  padding-left: 18px;
+  border-left: 2px solid var(--stamp);
+  color: var(--ink-2);
+  max-width: 58ch;
+}
+
+.dossier h3, .panel h3 {
+  margin: 30px 0 12px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.dossier h3:first-of-type, .panel h3:first-of-type { margin-top: 0; }
+.panel p { margin: 0 0 14px; font-size: 14.5px; line-height: 1.6; }
+.panel .lead + h3 { margin-top: 0; }
+
+ol.steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+ol.steps li {
+  counter-increment: step;
+  display: flex;
+  gap: 13px;
+  padding: 8px 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+ol.steps li::before {
+  content: counter(step);
+  flex: 0 0 auto;
+  color: var(--stamp);
+  font-variant-numeric: tabular-nums;
+}
+
+.file-row { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.file-chip {
+  border: 1px solid var(--rule);
+  background: transparent;
+  color: var(--ink-2);
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  cursor: pointer;
+}
+
+.file-chip:hover { border-color: var(--stamp); color: var(--stamp); }
+
+.file-chip[aria-pressed="true"] {
+  border-color: var(--stamp);
+  background: var(--stamp-bg);
+  color: var(--stamp);
+}
+
+pre.listing {
+  margin: 12px 0 0;
+  padding: 18px 20px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  overflow: auto;
+  max-height: 56vh;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+  tab-size: 4;
+}
+
+.warn {
+  border-left: 2px solid var(--stamp);
+  padding: 2px 0 2px 16px;
+  margin: 12px 0 0;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.warn a { color: var(--stamp); }
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 70px 0;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+/* ---- файловий переглядач ---- */
+
+.files { padding: 30px 34px; max-width: 940px; margin: 0 auto; }
+
+.files-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 4px;
+}
+
+.folder {
+  margin: 22px 0 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.folder:first-of-type { margin-top: 10px; }
+
+.file-line {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  text-align: left;
+  padding: 6px 4px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.file-line:hover { color: var(--ink); background: var(--paper); }
+.file-line[aria-current="true"] { color: var(--stamp); }
+
+.file-line .nm {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.file-line .sz {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.file-line .kind {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  padding: 1px 5px;
+}
+
+.viewer-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 34px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.viewer-head .path { flex: 1; min-width: 140px; font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
+
+.shot { display: block; max-width: 100%; margin: 24px auto; border: 1px solid var(--rule); }
+
+/* Код займає всю доступну висоту: у рамці на пів екрана читати незручно. */
+pre.codeview {
+  margin: 0;
+  padding: 22px 34px 48px;
+  border: 0;
+  background: var(--print);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  tab-size: 4;
+  min-height: calc(100vh - 118px);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+@media (max-width: 780px) {
+  pre.codeview { padding-left: 20px; padding-right: 20px; }
+}
+
+/* ---- markdown ---- */
+
+/* Текстові панелі центруємо: на широкому екрані колонка, притиснута до лівого
+   краю, читається як випадковість, а не як рішення. Код — виняток, у нього
+   лівий край змістовний. */
+.md { padding: 26px 34px 60px; max-width: 78ch; margin: 0 auto; }
+.md > :first-child { margin-top: 0; }
+
+.md h1, .md h2, .md h3, .md h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  text-wrap: balance;
+  margin: 32px 0 12px;
+}
+
+.md h1 { font-size: 27px; }
+.md h2 { font-size: 21px; padding-bottom: 7px; border-bottom: 1px solid var(--rule); }
+.md h3 { font-size: 17px; }
+.md h4 { font-size: 15px; }
+
+.md p { margin: 0 0 14px; }
+.md ul, .md ol { margin: 0 0 14px; padding-left: 22px; }
+.md li { margin-bottom: 5px; }
+.md a { color: var(--stamp); }
+.md hr { border: 0; border-top: 1px solid var(--rule); margin: 26px 0; }
+
+.md blockquote {
+  margin: 0 0 14px;
+  padding: 2px 0 2px 16px;
+  border-left: 2px solid var(--stamp);
+  color: var(--ink-2);
+}
+
+.md code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--surface-2, var(--print));
+  border: 1px solid var(--rule-soft);
+  padding: 1px 5px;
+}
+
+.md pre {
+  margin: 0 0 16px;
+  padding: 15px 17px;
+  border: 1px solid var(--rule);
+  background: var(--print);
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.md pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+.md .tablewrap { overflow-x: auto; margin: 0 0 18px; }
+
+.md table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+.md th, .md td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+.md th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); border-bottom-color: var(--rule); }
+.md td code { overflow-wrap: anywhere; }
+
+@media (max-width: 780px) {
+  .files, .md { padding-left: 20px; padding-right: 20px; }
+  .viewer-head { padding-left: 20px; padding-right: 20px; }
+}
+
+/* ============ Підвал ============ */
+
+.colofoot {
+  border-top: 1px solid var(--ink);
+  padding: 20px 0 50px;
+}
+
+.colofoot .shell {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  line-height: 1.9;
+}
+
+.colofoot a { color: var(--stamp); text-decoration: none; }
+.colofoot a:hover { text-decoration: underline; }
+
+/* ============ Адаптив ============ */
+
+@media (max-width: 1080px) {
+  .shell { padding: 0 20px; }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  /* Без min-width: 0 елемент сітки розтягується під найширший вміст, і смуга
+     фільтрів замість того, щоб гортатися всередині себе, розсовувала всю
+     сторінку: на екрані 375px документ виходив 712px завширшки. */
+  .finding-aid, .sheet { min-width: 0; }
+
+  .finding-aid { position: static; }
+
+  .aid-list {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .aid-list::-webkit-scrollbar { display: none; }
+
+  .aid-item {
+    flex: 0 0 auto;
+    border: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 6px 12px;
+    white-space: nowrap;
+  }
+
+  .aid-foot { display: none; }
+  .sheet { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+  .pv-body { flex-direction: column; }
+
+  .pv-index {
+    width: auto;
+    flex: 0 0 auto;
+    max-height: 170px;
+    border-right: 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .pv-stage { min-height: 62vh; }
+  .dossier { padding: 24px; }
+}
+
+@media (max-width: 640px) {
+  .masthead { padding-top: 28px; }
+
+  .masthead-side {
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  /* під вузьким заголовком вирівнювання праворуч читається як помилка */
+  .colophon { text-align: left; }
+  .standfirst { font-size: 15.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

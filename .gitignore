@@ -1,0 +1,28 @@
+# dependencies (projects/nodejs/lab1 — install locally with `npm install`)
+# package-lock.json НЕ ігноруємо: він лежить в оригіналі лабораторної, а тека
+# projects/ зберігається такою, якою була здана
+node_modules/
+
+# службове
+*.log
+*.bak
+*.tmp
+~$*.docx
+~$*.doc
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editors
+.vscode/
+.idea/
+*.swp
+
+# Два застряглі дублікати. Це ранні версії оболонки: антивірус свого часу забрав
+# їх у карантин, а після відновлення повернув на диск і заблокував від видалення.
+# Робочі версії — assets/shell.js і assets/catalog.js; ці двоє ні до чого не
+# підключені. Коли їх вдасться прибрати з диска, ці рядки можна видалити.
+/catalog.js
+/assets/app.js

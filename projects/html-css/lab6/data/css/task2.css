@@ -1,0 +1,321 @@
+/* Лабораторна №6, завдання 2 — віджет погоди й календаря
+ *
+ * Композиція авторська й не змінена: дата ліворуч угорі, рік праворуч,
+ * годинник, хмара, чорна картка погоди, сіра картка календаря під нею, місяць
+ * і блок зі стрілками на лівому краї картки. Розмітка не чіпалася.
+ *
+ * Що було не так. Усі блоки стояли position:absolute у відсотках від вікна, а
+ * розміри — у пікселях і словесних кеглях (large, xx-large, 40px, 60px). Тому
+ * пропорції трималися рівно на одному екрані: на ширшому шрифти й місяць
+ * ставали дрібними відносно карток, на вужчому — навпаки, а через різне
+ * співвідношення сторін вікна блоки роз'їжджалися по вертикалі.
+ *
+ * Тепер уся сцена — макет 1440×860, вписаний у вікно цілком:
+ *
+ *   --u    1% ширини макета            позиції по горизонталі
+ *   --v    1% висоти макета            позиції по вертикалі
+ *   --px   1 піксель макета            усе, що в оригіналі було в пікселях
+ *   --x0   ліворуч від сцени           зсув, який тримає сцену по центру
+ *   --y0   згори від сцени
+ *
+ * Відсотки з оригіналу лишились ті самі числа — просто рахуються від макета, а
+ * не від вікна. Вкладені елементи (× на картках, °, підпис міста) і далі стоять
+ * у відсотках від своїх батьків, тому їх правити не довелося: батьки
+ * масштабуються, діти їдуть за ними.
+ */
+
+:root {
+  /* Сцена вписується у вікно цілком: по ширині, по висоті, і не більша за
+     20px на одиницю, щоб на 4K макет не роздувало. */
+  --u: min(1vw, 1.6745vh, 20px);
+  --v: calc(0.59722 * var(--u));
+  --px: calc(var(--u) / 14.4);
+  --x0: calc(50vw - 50 * var(--u));
+  --y0: calc(50vh - 50 * var(--v));
+
+  /* Скільки бракує стрілці до 44px — стільки їй допишемо невидимої області
+     натискання на тач-екрані. На великому екрані виходить нуль. */
+  --tap: max(0px, calc((44px - 40 * var(--px)) / 2));
+}
+
+body{
+    margin: 0;
+    background: linear-gradient(90deg, grey, white);
+    overflow: hidden;
+    font-size: calc(16 * var(--px));
+}
+
+div.year{
+    position: absolute;
+    left: calc(var(--x0) + 93 * var(--u));
+    top: calc(var(--y0) + 3 * var(--v));
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 112.5%;                     /* large */
+}
+
+div.date{
+    position: absolute;
+    top: calc(var(--y0) + 2.5 * var(--v));
+    left: calc(var(--x0) + 2 * var(--u));
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 112.5%;                     /* large */
+}
+
+div.time{
+    position: absolute;
+    left: calc(var(--x0) + 30 * var(--u));
+    top: calc(var(--y0) + 12 * var(--v));
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 200%;                       /* xx-large */
+}
+
+div.stime{
+    position: absolute;
+    left: 110%;
+    top: 45%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 40.625%;                    /* small від 32px годинника */
+}
+
+div.weather-back{
+    position: absolute;
+    background-color: black;
+    width: calc(25 * var(--u));
+    height: calc(53 * var(--v));
+    color:aliceblue;
+    left: calc(var(--x0) + 35.7 * var(--u));
+    top: calc(var(--y0) + 20 * var(--v));
+    box-shadow: calc(4 * var(--px)) calc(4 * var(--px)) calc(15 * var(--px)) calc(1 * var(--px)) rgb(53, 53, 53);
+}
+
+div.weather-name-city{
+    position: absolute;
+    left: 5%;
+    top: 5%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 62.5%;                      /* x-small */
+}
+
+div.temp{
+    position: absolute;
+    left: 5%;
+    top: 70%;
+    color: #929292;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 500%;
+}
+
+div.deg{
+    position: absolute;
+    color: #929292;
+    top:-15%;
+    left:100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size:80%;
+}
+
+div.date-back{
+    position: absolute;
+    color:rgb(104, 104, 104);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size:80%;
+    top: 92%;
+    left: 75%;
+}
+
+a.btn{
+    position: absolute;
+    left: 87%;
+    text-decoration: none;
+    color: white;
+    font-size: 300%;
+}
+
+div.calendar-back{
+    background: #c6c6c6;
+    position: absolute;
+    left: calc(var(--x0) + 50 * var(--u));
+    top: calc(var(--y0) + 63 * var(--v));
+    width: calc(27 * var(--u));
+    height: calc(30 * var(--v));
+    z-index: -1;
+    box-shadow: calc(8 * var(--px)) calc(8 * var(--px)) calc(5 * var(--px)) calc(1 * var(--px)) gray;
+}
+
+div.Monday{
+    position: absolute;
+    left: 8%;
+    top: 40%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:#a3a3a3;
+}
+
+div.Tue{
+    position: absolute;
+    left:27%;
+    top: 40%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:#a3a3a3;
+}
+
+div.Wed{
+    position: absolute;
+    left:45%;
+    top:40%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:#a3a3a3;
+}
+
+div.Thu{
+    position: absolute;
+    left:65%;
+    top:40%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:#a3a3a3;
+}
+
+div.Fri{
+    position: absolute;
+    left:85%;
+    top:40%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:#a3a3a3;
+}
+
+div.first{
+    position: absolute;
+    left:9%;
+    top:54%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:black;
+}
+
+div.second{
+    position: absolute;
+    left:28%;
+    top:54%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:black;
+}
+
+div.third{
+    position: absolute;
+    left:46%;
+    top:54%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:black;
+}
+
+div.fourth{
+    position: absolute;
+    left:66%;
+    top:54%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:black;
+}
+
+div.fiveth{
+    position: absolute;
+    left:86%;
+    top:54%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color:black;
+}
+
+strong.temp{
+    font-weight: 600;
+}
+
+a.wbtn{
+    position: absolute;
+    left:90%;
+    font-size: 300%;
+    color:black;
+    text-decoration: none;
+}
+
+.moon {
+    position: absolute;
+    left: calc(var(--x0) + 35 * var(--u));
+    top: calc(var(--y0) + 82 * var(--v));
+    width: calc(60 * var(--px));
+    height: calc(60 * var(--px));
+    border-radius: 50%;
+    background: -webkit-linear-gradient(45deg, rgb(122, 131, 129) 16%, rgb(0, 0, 0));
+    background: -moz-linear-gradient(45deg, rgb(122, 131, 129) 16%, rgb(0, 0, 0));
+    background: linear-gradient(45deg, rgb(122, 131, 129) 16%, rgb(0, 0, 0));
+}
+
+img.sky{
+    position: absolute;
+    width: calc(40 * var(--u));
+    z-index: 1;
+    left: calc(var(--x0) + 38 * var(--u));
+    top: calc(var(--y0) + 18 * var(--v));
+}
+
+/* Блок зі стрілками.
+ *
+ * Було: сам блок стояв на left: 33.3%, а картка погоди — на 35.7%, і обидва
+ * рахувалися від вікна. Різниця між ними змінювалася з шириною екрана, тож
+ * блок то глибше заходив на картку, то з'їжджав ліворуч від неї. Тепер він
+ * прив'язаний до самої картки й сидить рівно на її лівому краї: половина
+ * назовні, половина всередині.
+ *
+ * Стрілки всередині стояли на left: 0 і right: 0 з top: 3%. Іконка ionicons —
+ * рядковий елемент, тож під нею лишався прогалок від міжрядкового інтервалу, і
+ * пара з'їжджала вниз-ліворуч від центру. Тепер це дві рівні половини flex, і
+ * кожна іконка стоїть точно по центру своєї.
+ */
+.miniBlock {
+    position: absolute;
+    display: flex;
+    box-sizing: content-box;
+    width: calc(80 * var(--px));
+    height: calc(40 * var(--px));
+    /* 41, а не 40: половина блока разом із рамкою, інакше він сідає на край
+       картки з перекосом у два пікселі. */
+    left: calc(var(--x0) + 35.7 * var(--u) - 41 * var(--px));
+    top: calc(var(--y0) + 40 * var(--v));
+    background-color: rgba(144, 150, 150, 0.5);
+    border: calc(1 * var(--px)) solid black;
+    z-index: 1;
+}
+
+.arrowLeft,
+.arrowRight {
+    position: relative;
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 250%;                       /* ті самі 40px макета */
+    line-height: 1;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* Сцена стискається разом із вікном, тож на телефоні стрілка виходить менша за
+   палець. Малюнок не чіпаємо — дописуємо невидиму область натискання назовні. */
+@media (pointer: coarse) {
+    .arrowLeft::after,
+    .arrowRight::after {
+        content: "";
+        position: absolute;
+        top: calc(-1 * var(--tap));
+        bottom: calc(-1 * var(--tap));
+    }
+
+    .arrowLeft::after  { left: calc(-1 * var(--tap)); right: 0; }
+    .arrowRight::after { left: 0; right: calc(-1 * var(--tap)); }
+}
+
+.arrowLeft:hover,
+.arrowRight:hover { background-color: rgba(255, 255, 255, 0.25); }
+
+.arrowLeft:active,
+.arrowRight:active { background-color: rgba(0, 0, 0, 0.12); }
+
+.arrowLeft ion-icon,
+.arrowRight ion-icon { display: block; }

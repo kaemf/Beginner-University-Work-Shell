@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"
+     stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+  <title>Зростання</title>
+  <path d="M8 46L24 30l10 10L54 20"/>
+  <path d="M40 20h14v14"/>
+  <path d="M8 56h48"/>
+</svg>

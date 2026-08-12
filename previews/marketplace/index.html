@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BUY&SOLD MARKET PLACE — демо у браузері</title>
+
+  <link rel="shortcut icon" href="../../projects/personal/marketplace/assets/images/favicon.ico.png">
+
+  <style>
+  /* Порт курсової, перемальований.
+   *
+   * Екрани, маршрути й уся логіка ті самі — змінене лише оформлення: замість
+   * стилів оригіналу (вони підключалися прямо з теки проєкту) власна таблиця.
+   * Порт із авторським виглядом лишився поряд, у previews/marketplace-legacy,
+   * і вмикається кнопкою «Оригінал» у шапці кадру.
+   *
+   * Верстка з розрахунку на телефон: одна колонка від 320px, картки й форми
+   * розтягуються, шапка згортається, поля не менші за 16px — інакше iOS сам
+   * наближає сторінку при фокусі. */
+
+  :root {
+    --bg:      #f6f4f9;
+    --card:    #ffffff;
+    --ink:     #17141f;
+    --ink-2:   #5b5468;
+    --ink-3:   #928aa1;
+    --rule:    #e7e3ee;
+    --accent:  #6d3bf5;
+    --accent-2:#f0365f;
+    --ok:      #0f8a5f;
+    --ok-bg:   #e6f6ef;
+    --bad:     #c62448;
+    --bad-bg:  #fdeaef;
+    --radius:  14px;
+    --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    --mono: "Cascadia Mono", Consolas, "Roboto Mono", monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ---- смужка демо ---- */
+
+  .demo-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px clamp(12px, 3vw, 22px);
+    background: #14111d;
+    color: #9c95ab;
+    font: 10.5px/1.6 var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .demo-bar b { color: #b79bff; font-weight: 500; }
+  .demo-bar button {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid #322c40;
+    color: #9c95ab;
+    font: inherit;
+    min-height: 32px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .demo-bar button:hover { border-color: #b79bff; color: #b79bff; }
+
+  /* ---- шапка ---- */
+
+  .head {
+    padding: clamp(28px, 6vw, 60px) clamp(16px, 4vw, 32px) clamp(18px, 3vw, 28px);
+    text-align: center;
+    background:
+      radial-gradient(80% 120% at 50% -30%, rgba(109, 59, 245, 0.16), transparent 60%),
+      var(--card);
+    border-bottom: 1px solid var(--rule);
+  }
+  .head h1 {
+    margin: 0 0 8px;
+    font-size: clamp(21px, 5.2vw, 38px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    background: linear-gradient(96deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .head h3 {
+    margin: 0;
+    font-size: clamp(13px, 2.4vw, 15px);
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .head br { display: none; }
+
+  /* ---- навігація ---- */
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px clamp(12px, 3vw, 22px);
+    background: var(--card);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .nav a {
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s, background-color .2s;
+  }
+  .nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ---- вміст ---- */
+
+  .main { max-width: 1100px; margin: 0 auto; padding: clamp(20px, 4vw, 40px) clamp(12px, 3vw, 24px) 60px; }
+
+  .main h2 {
+    margin: 0 0 18px;
+    font-size: clamp(19px, 3.4vw, 26px);
+    font-weight: 750;
+    letter-spacing: -0.015em;
+    border: none;
+  }
+
+  .all_items_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: clamp(12px, 2vw, 20px);
+  }
+
+  /* Екрани «Мої товари» й «Кабінет» віддають вміст просто в корінь, без .main —
+     тому поля й обмеження ширини дописуємо самим блокам, інакше на телефоні
+     картки й повідомлення лягають упритул до країв. */
+  #app > .all_items_container,
+  #app > #warning_msg,
+  #app > #success_msg {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(12px, 3vw, 24px);
+    padding-right: clamp(12px, 3vw, 24px);
+  }
+  #app > .all_items_container { padding-top: 6px; padding-bottom: 60px; }
+  #app > #warning_msg, #app > #success_msg { margin-top: clamp(18px, 4vw, 32px); }
+
+  .single_item {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 18px;
+    transition: transform .3s cubic-bezier(.2,.7,.3,1), box-shadow .3s;
+  }
+  .single_item:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(23,20,31,.1); }
+
+  .single_item h3 { margin: 0 0 8px; font-size: 16.5px; font-weight: 700; line-height: 1.3; }
+  .single_item p { margin: 0 0 12px; font-size: 14px; color: var(--ink-2); }
+
+  .single_item .price {
+    margin: auto 0 14px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .single_item .price span { font-size: 12px; font-weight: 600; color: var(--ink-3); }
+
+  .btn button {
+    width: 100%;
+    min-height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: linear-gradient(96deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font: inherit;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter .2s, transform .2s;
+  }
+  .btn button:hover { filter: brightness(1.08); }
+  .btn button:active { transform: translateY(1px); }
+
+  .operations { display: flex; gap: 8px; }
+  .operations .op {
+    flex: 1;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    transition: color .2s, border-color .2s, background-color .2s;
+  }
+  .operations .edit:hover { color: var(--accent); border-color: var(--accent); }
+  .operations .del:hover { color: var(--bad); border-color: var(--bad); background: var(--bad-bg); }
+
+  /* ---- форми ---- */
+
+  .formWrap {
+    /* На телефоні 440px ширші за екран, і картка лягала впритул до країв —
+       тому ширина з полями, а не просто max-width. */
+    width: min(440px, 100% - 24px);
+    margin: clamp(20px, 5vw, 54px) auto;
+    padding: clamp(22px, 5vw, 36px);
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: 0 18px 44px rgba(23, 20, 31, 0.07);
+  }
+  .formWrap h1 {
+    margin: 0 0 20px;
+    font-size: clamp(20px, 4.4vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .formWrap .hint { margin: -12px 0 18px; font-size: 13.5px; color: var(--ink-3); }
+  .formWrap p:last-of-type { margin-bottom: 0; font-size: 14px; color: var(--ink-2); }
+  .formWrap a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .formWrap a:hover { text-decoration: underline; }
+
+  /* Екран входу єдиний, де поле обгорнуте класом, а не id, — беремо обидва. */
+  #formInput, .formInput { margin-bottom: 12px; }
+  #formInput input, #formInput textarea, #formInput select,
+  .formInput input, .formInput textarea, .formInput select {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: #fbfafd;
+    color: var(--ink);
+    font: inherit;
+    font-size: 16px;                 /* не менше 16px — інакше iOS наближає */
+    transition: border-color .2s, background-color .2s;
+  }
+  #formInput input:focus, #formInput textarea:focus,
+  .formInput input:focus, .formInput textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: #fff;
+  }
+  .formWrap .btn { margin-top: 18px; }
+
+  /* ---- повідомлення ---- */
+
+  #warning_msg, #success_msg {
+    margin: 0 0 16px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  #warning_msg:empty, #success_msg:empty { display: none; padding: 0; margin: 0; }
+  #warning_msg { background: var(--bad-bg); color: var(--bad); }
+  #success_msg { background: var(--ok-bg); color: var(--ok); }
+
+  .creds {
+    margin: 14px 0 0;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #f0ecfb;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+    .single_item:hover { transform: none; }
+  }
+
+  @media (max-width: 420px) {
+    .all_items_container { grid-template-columns: 1fr; }
+    .nav a { flex: 1 1 calc(50% - 8px); text-align: center; }
+  }
+  </style>
+</head>
+<body>
+
+  <div class="demo-bar">
+    <span>MarketPlace &middot; PHP + MySQL &rarr; <b>демо у браузері</b> &middot; дані у localStorage</span>
+    <button type="button" id="reset-demo">Скинути дані демо</button>
+  </div>
+
+  <div id="app"></div>
+
+<script>
+/*
+ * Статичний порт курсової MarketPlace.
+ *
+ * Оригінал — 17 файлів PHP із PDO та MySQL: projects/personal/marketplace/
+ * Тут відтворено ті самі дев'ять екранів, ті самі перевірки й ті самі тексти
+ * повідомлень, але замість бази — localStorage, а замість переходів по .php —
+ * маршрутизація за хешем. Розмітка й класи збережені, стилі підключені
+ * з оригінальної теки, тому виглядає воно один в один.
+ *
+ * Таблиці з database/market_web_app.sql лягли у три ключі: login, user_reg, items.
+ */
+(function () {
+  'use strict';
+
+  var K = { login: 'mp-login', reg: 'mp-user_reg', items: 'mp-items', session: 'mp-session' };
+  var app = document.getElementById('app');
+
+  // ---- сховище (замість PDO) ----
+
+  /*
+   * localStorage доступний не завжди. Коли архів відкрито з диска, сторінка
+   * в кадрі дістає власне походження, і будь-яке звернення до сховища кидає
+   * SecurityError. Раніше write() ковтав цю помилку мовчки: реєстрація ніби
+   * проходила, дашборд відкривався, але користувач нікуди не записувався — і
+   * вхід під ним уже не працював, як і решта CRUD. Мовчки, без жодного слова.
+   *
+   * Тому перевіряємо сховище одразу, і якщо його немає — тримаємо дані в
+   * пам'яті. Вони не переживуть перезавантаження, зате все працює.
+   */
+  var store = (function () {
+    try {
+      var probe = '__mp' + Math.random();
+      localStorage.setItem(probe, '1');
+      localStorage.removeItem(probe);
+      return localStorage;
+    } catch (e) {
+      var mem = {};
+      return {
+        memory: true,
+        getItem: function (k) {
+          return Object.prototype.hasOwnProperty.call(mem, k) ? mem[k] : null;
+        },
+        setItem: function (k, v) { mem[k] = String(v); },
+        removeItem: function (k) { delete mem[k]; }
+      };
+    }
+  })();
+
+  function read(key, fallback) {
+    try { var v = JSON.parse(store.getItem(key)); return v === null ? fallback : v; }
+    catch (e) { return fallback; }
+  }
+  function write(key, value) {
+    try { store.setItem(key, JSON.stringify(value)); } catch (e) { /* нікуди діватись */ }
+  }
+
+  /*
+   * Оригінал зберігав password_hash(). Тут повноцінного хешу нема де взяти:
+   * crypto.subtle недоступний, якщо сторінку відкрито з диска (file:// — не
+   * захищений контекст). Це демо без сервера, тож пароль зводиться до короткого
+   * незворотного відбитка — рівно щоб не тримати його відкритим текстом.
+   * Справжнім сховищем паролів це не є і бути не може.
+   */
+  function digest(s) {
+    var h = 5381;
+    for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+    return 'd' + (h >>> 0).toString(36);
+  }
+
+  function seed() {
+    if (read(K.login, null) !== null) return;
+    write(K.login, [{ id: 1, email: 'demo@example.com', userName: 'demo', password: digest('demo1234') }]);
+    write(K.reg, [{ id: 1, firstName: 'Demo', lastName: 'User' }]);
+    write(K.items, [
+      { id: 4, marketId: 'demo', itemName: 'Nokia 3310', itemDescription: 'Легенда. Не б\'ється, тримає тиждень.', itemPrice: '1 200' },
+      { id: 3, marketId: 'demo', itemName: 'Велосипед Aist', itemDescription: 'Міський, 7 швидкостей, стан хороший.', itemPrice: '4 500' },
+      { id: 2, marketId: 'demo', itemName: 'Гітара Yamaha F310', itemDescription: 'Акустична, з чохлом і каподастром.', itemPrice: '6 800' },
+      { id: 1, marketId: 'demo', itemName: 'Монітор Dell 24"', itemDescription: 'IPS, 75 Гц, два HDMI.', itemPrice: '3 100' }
+    ]);
+  }
+
+  function items() {
+    // ORDER BY id DESC — як в оригінальних запитах
+    return read(K.items, []).slice().sort(function (a, b) { return b.id - a.id; });
+  }
+  function users() { return read(K.login, []); }
+  function session() { return read(K.session, null); }
+  function setSession(u) { write(K.session, u); }
+
+  function nextId(rows) {
+    return rows.reduce(function (m, r) { return Math.max(m, r.id); }, 0) + 1;
+  }
+
+  // ---- розмітка ----
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function nav(links) {
+    return '<div class="nav">' + links.map(function (l) {
+      return '<a href="#' + l[1] + '">' + esc(l[0]) + '</a>';
+    }).join('') + '</div>';
+  }
+
+  function head(extra) {
+    return '<header class="head">' +
+      '<h1>WELCOME TO BUY&amp;SOLD MARKET PLACE</h1>' +
+      '<h3>The best place to sold or buy...</h3><br>' +
+      (extra || '') +
+      '</header>';
+  }
+
+  function warn(m) { return '<p id="warning_msg">' + esc(m || '') + '</p>'; }
+  function good(m) { return '<p id="success_msg">' + esc(m || '') + '</p>'; }
+
+  function itemCard(it, ops) {
+    return '<article class="single_item">' +
+      '<h3>' + esc(it.itemName) + '</h3>' +
+      '<p>' + esc(it.itemDescription) + '</p>' +
+      '<p class="price">' + esc(it.itemPrice) + ' <span>UAH</span></p>' +
+      (ops
+        ? '<div class="operations">' +
+            '<a class="op edit" href="#update/' + it.id + '">Редагувати</a>' +
+            '<a class="op del" href="#my-items/del/' + it.id + '">Видалити</a>' +
+          '</div>'
+        : '<div class="btn"><button type="button">Купити</button></div>') +
+      '</article>';
+  }
+
+  // ---- екрани ----
+  // msg / msg1 приходять між переходами так само, як через $msg у PHP
+
+  var flash = {};
+
+  function go(route, m) {
+    flash = m || {};
+    // Присвоєння того самого хеша не викликає hashchange, а більшість повідомлень
+    // про помилку повертають користувача на ту саму сторінку — тому перемальовуємо
+    // вручну, інакше текст помилки просто не з'явиться.
+    if (location.hash.replace(/^#/, '') === route) render();
+    else location.hash = route;
+  }
+
+  function guard() {
+    // відповідник helpers/check_login.php
+    if (!session()) { location.hash = 'login'; return false; }
+    return true;
+  }
+
+  var screens = {
+
+    home: function () {
+      var list = items();
+      return head() +
+        nav([['LogIn', 'login'], ['SignUp', 'signup'], ['Home', 'home']]) +
+        '<div class="main">' +
+          '<h2>Our Trending Products</h2>' +
+          warn(list.length ? '' : 'No Items Yet') +
+          '<div class="all_items_container">' +
+            list.map(function (i) { return itemCard(i, false); }).join('') +
+          '</div>' +
+        '</div>';
+    },
+
+    login: function () {
+      return nav([['SignUp', 'signup'], ['Home', 'home']]) +
+        '<div class="formWrap">' +
+          warn(flash.msg) +
+          '<h1>SignIn</h1>' +
+          '<form data-act="login">' +
+            '<div class="formInput"><input type="text" name="uname" placeholder="Enter username"></div>' +
+            '<div class="formInput"><input type="password" name="pass" placeholder="Enter password"></div>' +
+            '<div class="btn"><button type="submit">LOGIN</button></div>' +
+          '</form>' +
+          '<p>Not register yet? <a href="#signup"> SignUp</a></p>' +
+          '<p><a href="#forgot"> Forgot Password</a></p>' +
+          '<p class="creds">демо-акаунт: demo / demo1234</p>' +
+        '</div>';
+    },
+
+    signup: function () {
+      return nav([['LogIn', 'login'], ['Home', 'home']]) +
+        '<div class="formWrap">' +
+          warn(flash.msg) +
+          '<h1>SignUp</h1>' +
+          '<form data-act="signup">' +
+            '<div id="formInput"><input type="text" name="fname" placeholder="Enter first name"></div>' +
+            '<div id="formInput"><input type="text" name="lname" placeholder="Enter last name"></div>' +
+            '<div id="formInput"><input type="text" name="uname" placeholder="Enter username"></div>' +
+            '<div id="formInput"><input type="email" name="mail" placeholder="Enter email"></div>' +
+            '<div id="formInput"><input type="password" name="pass" placeholder="Enter password"></div>' +
+            '<div id="formInput"><input type="password" name="cpass" placeholder="Comfirm password"></div>' +
+            '<div class="btn"><button type="submit">SignUp</button></div>' +
+          '</form>' +
+          '<p>Register already? <a href="#login"> LogIn</a></p>' +
+        '</div>';
+    },
+
+    dashboard: function () {
+      if (!guard()) return '';
+      var list = items();
+      return head('<h2>' + esc(session().toUpperCase()) + '\'S PAGE STORE</h2>') +
+        nav([['Logout', 'logout'], ['Reset password', 'reset'], ['My Items', 'my-items'], ['Post Item', 'post']]) +
+        '<div class="main"><br><h2>All Recently Posted Items</h2><br>' +
+          warn(list.length ? '' : 'No Items Yet') +
+          '<div class="all_items_container">' +
+            list.map(function (i) { return itemCard(i, false); }).join('') +
+          '</div>' +
+        '</div>';
+    },
+
+    post: function () {
+      if (!guard()) return '';
+      return nav([['logout', 'logout'], ['My Items', 'my-items'], ['Dashboard', 'dashboard']]) +
+        '<div class="formWrap">' +
+          warn(flash.msg) + good(flash.msg1) +
+          '<h1>Post An Item</h1>' +
+          '<form data-act="post">' +
+            '<div id="formInput"><input type="text" name="name_item" placeholder="Item Name"></div>' +
+            '<div id="formInput"><input type="text" name="item_price" placeholder="Item Price;  e.g 1,000"></div>' +
+            '<div id="formInput"><textarea rows="3" cols="30" name="item_desc" placeholder="Item Description"></textarea></div>' +
+            '<div class="btn"><button type="submit">POST</button></div>' +
+          '</form>' +
+        '</div>';
+    },
+
+    'my-items': function () {
+      if (!guard()) return '';
+      var mine = items().filter(function (i) { return i.marketId === session(); });
+      return nav([['logout', 'logout'], ['Post Item', 'post'], ['Dashboard', 'dashboard']]) +
+        warn(flash.msg || (mine.length ? '' : 'You have not posted any items yet')) +
+        '<div class="all_items_container">' +
+          mine.map(function (i) { return itemCard(i, true); }).join('') +
+        '</div>';
+    },
+
+    update: function (id) {
+      if (!guard()) return '';
+      var it = items().filter(function (i) { return i.id === Number(id); })[0];
+      if (!it) { location.hash = 'my-items'; return ''; }
+      return nav([['logout', 'logout'], ['My Items', 'my-items'], ['Dashboard', 'dashboard']]) +
+        '<div class="formWrap">' +
+          '<h1>Update This Item</h1>' +
+          warn(flash.msg) +
+          '<form data-act="update" data-id="' + it.id + '">' +
+            '<div id="formInput"><input type="text" name="item_name" value="' + esc(it.itemName) + '"></div>' +
+            '<div id="formInput"><input type="text" name="item_price" value="' + esc(it.itemPrice) + '"></div>' +
+            '<div id="formInput"><input type="text" name="item_desc" value="' + esc(it.itemDescription) + '"></div>' +
+            '<div class="btn"><button type="submit">Update</button></div>' +
+          '</form>' +
+        '</div>';
+    },
+
+    forgot: function () {
+      return '<div class="formWrap">' +
+          warn(flash.msg) +
+          '<h1>Account Recovery</h1>' +
+          '<p class="hint">Enter Account Username and Email to verify ownership</p>' +
+          '<form data-act="forgot">' +
+            '<div id="formInput"><input type="text" name="uname" placeholder="Username"></div>' +
+            '<div id="formInput"><input type="text" name="mail" placeholder="Email"></div>' +
+            '<div class="btn"><button type="submit">Verify</button></div>' +
+          '</form>' +
+        '</div>';
+    },
+
+    reset: function () {
+      return nav([['Home', 'home']]) +
+        '<div class="formWrap">' +
+          warn(flash.msg) + good(flash.msg1) +
+          '<h1>Password Reset</h1>' +
+          '<form data-act="reset">' +
+            '<div class="formInput"><input type="password" name="pass1" placeholder="New Password"></div>' +
+            '<div class="formInput"><input type="password" name="pass2" placeholder="Re-enter password"></div>' +
+            '<div class="btn"><button type="submit">Reset</button>' +
+            '<p><a href="#login">Back-to-Login</a></p></div>' +
+          '</form>' +
+        '</div>';
+    }
+  };
+
+  // ---- обробка форм (відповідники helpers/*.php) ----
+
+  var actions = {
+
+    login: function (f) {
+      if (!f.uname || !f.pass) return go('login', { msg: 'Fill the fields' });
+      var u = users().filter(function (x) { return x.userName === f.uname.trim(); })[0];
+      if (u && u.password === digest(f.pass.trim())) { setSession(u.userName); return go('dashboard'); }
+      go('login', { msg: 'Wrong Username or Password' });
+    },
+
+    signup: function (f) {
+      if (!f.fname || !f.lname || !f.uname || !f.mail || !f.pass || !f.cpass)
+        return go('signup', { msg: 'All fields are required!' });
+      if (f.pass.trim() !== f.cpass.trim())
+        return go('signup', { msg: 'Password Mismatch!' });
+
+      var all = users();
+      if (all.some(function (x) { return x.userName === f.uname.trim(); }))
+        return go('signup', { msg: 'UserName Already Taken' });
+      if (all.some(function (x) { return x.email === f.mail.trim(); }))
+        return go('signup', { msg: 'Email Already Taken' });
+
+      var reg = read(K.reg, []);
+      reg.push({ id: nextId(reg), firstName: f.fname.trim(), lastName: f.lname.trim() });
+      write(K.reg, reg);
+
+      all.push({ id: nextId(all), email: f.mail.trim(), userName: f.uname.trim(), password: digest(f.pass.trim()) });
+      write(K.login, all);
+
+      setSession(f.uname.trim());
+      go('dashboard');
+    },
+
+    post: function (f) {
+      if (!f.name_item || !f.item_desc || !f.item_price)
+        return go('post', { msg: 'Please fill all item details' });
+
+      var all = read(K.items, []);
+      all.push({
+        id: nextId(all), marketId: session(),
+        itemName: f.name_item.trim(),
+        itemDescription: f.item_desc.trim(),
+        itemPrice: f.item_price.trim()
+      });
+      write(K.items, all);
+      go('post', { msg1: 'Item Added Successfully!' });
+    },
+
+    update: function (f, id) {
+      if (!f.item_name || !f.item_price || !f.item_desc)
+        return go('update/' + id, { msg: 'Please fill all fields' });
+
+      var all = read(K.items, []);
+      all.forEach(function (i) {
+        if (i.id === Number(id)) {
+          i.itemName = f.item_name.trim();
+          i.itemPrice = f.item_price.trim();
+          i.itemDescription = f.item_desc.trim();
+        }
+      });
+      write(K.items, all);
+      go('my-items');
+    },
+
+    forgot: function (f) {
+      if (!f.uname || !f.mail) return go('forgot', { msg: 'All fields are required' });
+      var u = users().filter(function (x) { return x.userName === f.uname.trim(); })[0];
+      if (!u || u.email !== f.mail.trim()) return go('forgot', { msg: 'Invalid credentials' });
+      setSession(u.userName);
+      go('reset');
+    },
+
+    reset: function (f) {
+      if (!f.pass1 || !f.pass2) return go('reset', { msg: 'Please, fill all the fields' });
+      if (f.pass1 !== f.pass2) return go('reset', { msg: 'password mismatch!!' });
+
+      var all = users();
+      all.forEach(function (u) { if (u.userName === session()) u.password = digest(f.pass1); });
+      write(K.login, all);
+      go('reset', { msg1: 'Reset successful, login now' });
+    }
+  };
+
+  // ---- маршрутизація ----
+
+  function render() {
+    var raw = location.hash.replace(/^#/, '') || 'home';
+    var parts = raw.split('/');
+    var name = parts[0];
+
+    if (name === 'logout') { setSession(null); location.hash = 'home'; return; }
+
+    // #my-items/del/<id> — відповідник userItems.php?del=...
+    if (name === 'my-items' && parts[1] === 'del') {
+      var all = read(K.items, []).filter(function (i) { return i.id !== Number(parts[2]); });
+      write(K.items, all);
+      return go('my-items', { msg: 'One item deleted' });
+    }
+
+    var screen = screens[name] || screens.home;
+    app.innerHTML = screen(parts[1]);
+    flash = {};
+    window.scrollTo(0, 0);
+  }
+
+  app.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = e.target;
+    var act = form.getAttribute('data-act');
+    if (!actions[act]) return;
+
+    var fields = {};
+    Array.prototype.forEach.call(form.elements, function (el) {
+      if (el.name) fields[el.name] = el.value;
+    });
+    actions[act](fields, form.getAttribute('data-id'));
+  });
+
+  // Коли сховища немає, чесно попереджаємо: дані живуть до перезавантаження.
+  if (store.memory) {
+    var bar = document.querySelector('.demo-bar span');
+    if (bar) bar.innerHTML = 'MarketPlace &middot; PHP + MySQL &rarr; <b>демо у браузері</b> ' +
+      '&middot; сховище недоступне, дані тримаються в пам’яті до перезавантаження';
+  }
+
+  document.getElementById('reset-demo').addEventListener('click', function () {
+    [K.login, K.reg, K.items, K.session].forEach(function (k) {
+      try { store.removeItem(k); } catch (e) { /* нічого */ }
+    });
+    seed();
+    location.hash = 'home';
+    render();
+  });
+
+  window.addEventListener('hashchange', render);
+
+  seed();
+  render();
+})();
+</script>
+</body>
+</html>

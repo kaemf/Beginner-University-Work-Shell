@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Регістрація</title>
+
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="data/css/task3.css">
+        
+        <link rel="icon" type="image/png" sizes="32x32" href="data/icon/form/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="data/icon/form/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="data/icon/form/favicon-16x16.png">
+        <link rel="manifest" href="data/icon/form/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+    <center>
+        <fieldset>
+            <legend>Форма</legend>
+        <form id="form">
+            <label style="margin-left:-26px; margin-top: 4px;" for="email">E-mail: </label><input style="margin-left: 23px;" autofocus placeholder="admin@gmail.com" type="email" name="email"></br>
+            <label style="margin-left:-31px; margin-top: 4px;" for="pass">Пароль: </label><input style="margin-left: 23px; margin-top: 2px;" placeholder="***" type="password" name="pass"></br>
+            <label style="margin-left:-31px; margin-top: 4px;" for="apass">Ще раз: </label><input style="margin-left: 23px; margin-top: 2px;" placeholder="***" type="password" name="apass"></br>
+            <label style="margin-left:-8px; margin-top: 7px;" for="name">Ім'я: </label><input style="margin-left: 23px; margin-top: 5px;" placeholder="Сергій" type="name" pattern="[A-Za-z]"></br>
+            <label style="margin-left:-48px; margin-top: 5px;" for="secondname">Призвіще: </label><input style="margin-left: 23px; margin-top: 2px;" placeholder="Середнюк" type="name" pattern="[A-Za-z]"></br>
+            <label style="margin-left:-90px; margin-top: 5px;" for="sex">Стать: </label>
+            <input style="margin-left:-40px; margin-top: 7px;" type="radio" name="sex" value="Чоловіча"><label style="margin-top: 5px;">Чоловіча</label>
+            <input style="margin-left:70px; margin-top: 7px;" type="radio" name="sex" value="Жіноча"><label style="margin-top: 5px;">Жіноча</label>
+            </br><label style="margin-left:-113px; margin-top: 7px;" for="city">Місто: </label>
+            <select style="margin-left: -66px; margin-top: 5px;">
+                <option value="Київ">Київ</option>
+                <option value="Житомир" selected>Житомир</option>
+                <option value="Львів">Львів</option>
+            </select></br>
+            <label style="margin-left: -145px; margin-top: 17px;" for="about">Про себе: </label></br><textarea style="margin-left:32px; margin-top:-8px"></textarea>
+            </br><label style="margin-top: 40px; margin-left: -120px;" for="agree">Згоди: </label></br>
+            <input type="checkbox" name="first"><label>Отримувати PUSH сайту</label></br>
+            <input type="checkbox" name="second"><label>Погоджуюсь з правилами сайту</label></br>
+            <input type="checkbox" name="third"><label>Сховати профіль на сайті</label></br>
+            <input type="checkbox" name="four"><label>Очищувати cookie</label></br>
+            <input type="submit" name="accept" value="ВІДПРАВИТИ" form="form">
+            <input type="reset" name="reload" value="ОЧИСТИТИ" form="form">
+        </form>
+    </fieldset>
+    </center>
+    </body>
+</html>

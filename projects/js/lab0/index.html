@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="data/css/style.css" type="text/css">
+    <title>Практична робота №0</title>
+</head>
+<body>
+    <main class="stage">
+        <header class="head" id="head"></header>
+
+        <section class="panel">
+            <div class="panel-top">
+                <p class="label">Розподіл суми семи кидків</p>
+                <p class="readout" id="readout"></p>
+            </div>
+
+            <canvas id="RandomScript" width="1120" height="300"></canvas>
+
+            <div class="axis">
+                <span>≤20</span><span>35</span><span>50</span><span>65</span><span>≥80</span>
+            </div>
+
+            <div class="controls">
+                <button class="btn primary" id="toggle" type="button"></button>
+
+                <label class="slider">
+                    <span>Кидків за кадр</span>
+                    <input id="rate" type="range" min="120" max="4000" step="20" value="1200">
+                    <b id="rate-val">1200</b>
+                </label>
+            </div>
+        </section>
+    </main>
+
+    <script type="text/javascript" src="data/js/whoit.js"></script>
+    <script type="text/javascript" src="data/js/random.js"></script>
+</body>
+</html>

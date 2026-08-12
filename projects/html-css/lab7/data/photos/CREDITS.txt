@@ -1,0 +1,9 @@
+﻿autumn.jpg  <-  Танцюючі тополі.jpg
+    автор: Vitalii Bashkatov
+    ліцензія: CC BY-SA 4.0
+    джерело: https://commons.wikimedia.org/wiki/File:%D0%A2%D0%B0%D0%BD%D1%86%D1%8E%D1%8E%D1%87%D1%96_%D1%82%D0%BE%D0%BF%D0%BE%D0%BB%D1%96.jpg
+
+winter.jpg  <-  Winter landscape of Carpathian forest.jpg
+    автор: AS Photography
+    ліцензія: CC BY 4.0
+    джерело: https://commons.wikimedia.org/wiki/File:Winter_landscape_of_Carpathian_forest.jpg

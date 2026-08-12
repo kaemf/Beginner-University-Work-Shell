@@ -1,0 +1,1373 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+*{background: #F7F4F4; font-family: 'Nunito';
+    font-style: normal;}
+
+.title{
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+    background: rgba(0,0,0,0);
+    width: min(800px, 96%);
+    height: 50px;
+    border-radius: 2px;
+}
+
+.title-name{
+    display: flex;
+    background: rgba(0,0,0,0);
+    align-items: center;
+    font-size: clamp(20px, 3.2vw, 40px);
+    font-family: 'Nunito';
+    font-style: normal;
+    text-align: center;
+}
+
+.title-name::before{content: "ВИБЕРІТЬ ЗАВДАННЯ";}
+
+.user{
+    display: flex;
+    justify-content: center;
+    margin: 10px auto;
+    background: rgba(0,0,0,0);
+    /* Було 1000px намертво — на вужчому екрані меню вилазило за край. */
+    width: min(1000px, 96%);
+    height: 100px;
+    border-radius: 2px;
+    transition: all .3s ease;
+    /* Точка відліку для смуг рамки: раніше вони позиціювались від сторінки
+       жорсткими пікселями (top:90px, left:270px), розрахованими під 1440. */
+    position: relative;
+}
+
+.img-f{
+    background: url(../source/circle.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 100px;
+}
+
+.img-s{
+    background: url(../source/square.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 100px;
+}
+
+.img-t{
+    background: url(../source/rectangle.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 100px;
+}
+
+.img-fo{
+    background: url(../source/triangle.png);
+    background-size: 100% 100%;
+    width: 100px;
+    height: 100px;
+}
+
+.first-choose{
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.text-f{
+    width: 10px;
+}
+
+.text-f::before{content: "Коло";}
+
+.second-choose{
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.test-s{
+    width: 10px;
+}
+
+.text-s::before{content: "Квадрат";}
+
+.third-choose{
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.text-t{
+    width: 10px;
+}
+
+.text-t::before{content: "Прямокутник";}
+
+.fourth-choose{
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.text-fo{
+    width: 10px;
+}
+
+.text-fo::before{content: "Трикутник";}
+
+.first-choose, .second-choose, .third-choose, .fourth-choose{cursor: pointer; margin-top: 20px;}
+
+/* Пункти розкладені виключкою по ширині, як рядок у документі: перший тулиться
+   до лівої стійки, останній до правої, а вільне місце ділиться порівну між
+   ними. Рівні слоти з центруванням давали інше — кожен пункт висів посеред
+   своєї чверті, і збоку лишалися великі порожнечі.
+   Жорсткі 200px і підписи, затиснуті в 10px, теж прибрані. */
+.first-choose, .second-choose, .third-choose, .fourth-choose{
+    flex: 0 1 auto;
+    width: auto;
+    min-width: 0;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.second-choose, .third-choose, .fourth-choose{
+    margin-left: auto;
+}
+
+.text-f, .test-s, .text-s, .text-t, .text-fo{
+    width: auto;
+    font-size: clamp(12px, 1.15vw, 16px);
+    white-space: nowrap;
+}
+
+/* Картинки мають натуральний розмір 192x162, а виводились у квадрат 100x100 з
+   background-size: 100% 100% — тобто розтягувались під коробку, і коло виходило
+   стиснутим. Тепер коробка тримає власне співвідношення зображення. */
+.img-f, .img-s, .img-t, .img-fo{
+    flex: 0 0 auto;
+    width: clamp(58px, 7.7vw, 118px);
+    height: auto;
+    aspect-ratio: 192 / 162;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.l-line{
+    left: 0;
+    height: 124%;
+    width: 5px;
+    background: #D16464;
+    /* Було 50px — разом із центруванням усередині слота це лишало понад сотню
+       порожніх пікселів між стійкою та першою картинкою. */
+    margin-right: 14px;
+    visibility: visible;
+    transition: all .3s ease;
+}
+
+.r-line{
+    right: 0;
+    height: 124%;
+    width: 5px;
+    background: #D16464;
+    margin-left: 14px;
+    visibility: visible;
+    transition: all .3s ease;
+}
+
+/* Горизонтальні смуги рамки тягнуться на всю ширину меню — від краю до краю,
+   де стоять вертикальні стійки. Так рамка змикається в суцільний прямокутник,
+   а не розпадається на дві палиці з боків. */
+.up-line{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 4px;
+    background: #D16464;
+    opacity: 1;
+    visibility: visible;
+    transition: all .3s ease;
+}
+
+.down-line{
+    position: absolute;
+    top: 120px;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 4px;
+    background: #D16464;
+    opacity: 1;
+    visibility: visible;
+    transition: all .3s ease;
+}
+
+/* Підсвітка при наведенні. Ліві/ширини рахує скрипт із реального положення
+   вибраного пункту — раніше вони були вписані пікселями під 1440 і не збігались
+   із пунктами ні на якій іншій ширині. */
+.st-up-l-c{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background: #D16464;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s ease;
+}
+
+.end-down-l-c{
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 0;
+    height: 4px;
+    opacity: 0;
+    background: #D16464;
+    visibility: hidden;
+    border-radius: 4px;
+    transition: all .3s ease;
+}
+
+html{
+    /* Підстраховка від випадкового горизонтального переповнення. */
+    overflow-x: hidden;
+}
+
+.dev{
+    display: flex;
+    margin: 20px auto;
+}
+
+.circle-task{
+    margin: 40px auto;
+    width: min(1900px, 96%);
+    height: 1000px;
+    position: absolute;
+    background: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+
+.circle-title{
+    width: 59.5%;
+    height: 327px;
+    margin-top: 50px;
+    margin-left: 6.67%;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(22px, 3.6vw, 50px);
+    line-height: 65px;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0);
+
+    color: #000000;
+}
+
+.circle-title::before{content: "програма на знаходження площі, діаметра, довжини дуги кола";}
+
+.c-radius-name{
+    position: absolute;
+    top: 400px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.c-radius-name::before{content: "Радіус";}
+
+.c-diametr-name{
+    position: absolute;
+    top: 480px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.c-diametr-name::before{content: "Діаметр";}
+
+.c-dovzhina-name{
+    position: absolute;
+    top: 560px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.c-dovzhina-name::before{content: "Довжина";}
+
+.c-radius-input{
+    position: absolute;
+    top: 430px;
+    left: 20.83%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.c-radius-input-in{
+    background: rgba(0,0,0,0);
+    border: none;
+    top: -20px;
+    width: 8.33%;
+    position: absolute;
+    cursor: pointer;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+input:focus{outline: none !important;}
+
+.c-diametr-out{
+    position: absolute;
+    top: 510px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.c-dovzhina-out{
+    position: absolute;
+    top: 590px;
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.c-plos-name{
+    position: absolute;
+    top: 640px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.c-plos-name::before{content: "Площа";}
+
+.c-radius-out{
+    position: absolute;
+    top: 670px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.button-s-c{
+    position: absolute;
+    width: 16.25%;
+    height: 53px;
+    left: 6.67%;
+    top: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #D16464;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.button-s-c-name{
+    width: 10.08%;
+    height: 25px;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    background: rgba(0,0,0,0);
+
+    text-transform: uppercase;
+
+    color: #FFFFFF;
+}
+
+.button-s-c-name::before{content: "обрахувати";}
+
+.diametr-c-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+    background: rgba(0,0,0,0);
+}
+
+.dovzhina-c-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.plos-c-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.square-task{
+    margin: 40px auto;
+    width: min(1900px, 96%);
+    height: 1000px;
+    position: absolute;
+    background: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+
+.square-title{
+    width: 59.5%;
+    height: 327px;
+    margin-top: 50px;
+    margin-left: 6.67%;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(22px, 3.6vw, 50px);
+    line-height: 65px;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0);
+
+    color: #000000;
+}
+
+.square-title::before{content: "програма на знаходження площі, периметра, діагоналі, радіусу вписаного и описаного кола";}
+
+.sq-side-name{
+    position: absolute;
+    top: 400px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-side-name::before{content: "Сторона квадрата";}
+
+.sq-side-input{
+    position: absolute;
+    top: 430px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.sq-side-input-in{
+    background: rgba(0,0,0,0);
+    border: none;
+    top: -20px;
+    width: 8.33%;
+    position: absolute;
+    cursor: pointer;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.button-s-sq{
+    position: absolute;
+    width: 16.25%;
+    height: 53px;
+    left: 6.67%;
+    top: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #D16464;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.button-s-sq-name{
+    width: 10.08%;
+    height: 25px;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    background: rgba(0,0,0,0);
+
+    text-transform: uppercase;
+
+    color: #FFFFFF;
+}
+
+.button-s-sq-name::before{content: "обрахувати";}
+
+.sq-plos-name{
+    position: absolute;
+    top: 480px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-plos-name::before{content: "Площа";}
+
+.sq-plos-out{
+    position: absolute;
+    top: 510px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.plos-sq-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-diag-name{
+    position: absolute;
+    top: 560px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-diag-name::before{content: "Діагональ";}
+
+.sq-diag-out{
+    position: absolute;
+    top: 590px;
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.diag-sq-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-radin-name{
+    position: absolute;
+    top: 640px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-radin-name::before{content: "Вписане коло";}
+
+.sq-radin-out{
+    position: absolute;
+    top: 670px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.radin-sq-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-per-name{
+    position: absolute;
+    top: 720px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-per-name::before{content: "Периметр";}
+
+.sq-per-out{
+    position: absolute;
+    top: 750px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.per-sq-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-radout-name{
+    position: absolute;
+    top: 795px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.sq-radout-name::before{content: "Описане коло";}
+
+.sq-radout-out{
+    position: absolute;
+    top: 825px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.radout-sq-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rectangle-task{
+    margin: 40px auto;
+    width: min(1900px, 96%);
+    height: 1000px;
+    position: absolute;
+    background: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+
+.rectangle-title{
+    width: 59.5%;
+    height: 327px;
+    margin-top: 50px;
+    margin-left: 6.67%;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(22px, 3.6vw, 50px);
+    line-height: 65px;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0);
+
+    color: #000000;
+}
+
+.rectangle-title::before{content: "програма на знаходження площі, периметра, діагоналі, кута між а, в прямокутника";}
+
+.rect-sidea-name{
+    position: absolute;
+    top: 400px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-sidea-name::before{content: "Сторона A";}
+
+.rect-sidea-input{
+    position: absolute;
+    top: 430px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.rect-sideb-name{
+    position: absolute;
+    top: 460px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-sideb-name::before{content: "Сторона B";}
+
+.rect-sideb-input{
+    position: absolute;
+    top: 490px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.rect-sidea-input-in, .rect-sideb-input-in{
+    background: rgba(0,0,0,0);
+    border: none;
+    top: -20px;
+    width: 8.33%;
+    position: absolute;
+    cursor: pointer;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.button-s-rect{
+    position: absolute;
+    width: 16.25%;
+    height: 53px;
+    left: 6.67%;
+    top: 550px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #D16464;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.button-s-rect-name{
+    width: 10.08%;
+    height: 25px;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    background: rgba(0,0,0,0);
+
+    text-transform: uppercase;
+
+    color: #FFFFFF;
+}
+
+.button-s-rect-name::before{content: "обрахувати";}
+
+.rect-plos-name{
+    position: absolute;
+    top: 550px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-plos-name::before{content: "Площа";}
+
+.rect-plos-out{
+    position: absolute;
+    top: 580px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.plos-rect-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-diag-name{
+    position: absolute;
+    top: 630px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-diag-name::before{content: "Діагональ";}
+
+.rect-diag-out{
+    position: absolute;
+    top: 660px;
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.diag-rect-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-cuta-name{
+    position: absolute;
+    top: 710px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-cuta-name::before{content: "Кут між А";}
+
+.rect-cuta-out{
+    position: absolute;
+    top: 740px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.cuta-rect-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-per-name{
+    position: absolute;
+    top: 790px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-per-name::before{content: "Периметр";}
+
+.rect-per-out{
+    position: absolute;
+    top: 820px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.per-rect-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-cutb-name{
+    position: absolute;
+    top: 865px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.rect-cutb-name::before{content: "Кут між В";}
+
+.rect-cutb-out{
+    position: absolute;
+    top: 895px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.cutb-rect-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.triangle-task{
+    margin: 40px auto;
+    width: min(1900px, 96%);
+    height: 1000px;
+    position: absolute;
+    background: rgba(0,0,0,0);
+    transition: all .3s ease;
+}
+
+.triangle-title{
+    width: 59.5%;
+    height: 327px;
+    margin-top: 50px;
+    margin-left: 6.67%;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 700;
+    font-size: clamp(22px, 3.6vw, 50px);
+    line-height: 65px;
+    text-transform: uppercase;
+    background: rgba(0,0,0,0);
+
+    color: #000000;
+}
+
+.triangle-title::before{content: "програма на знаходження площі, периметра, радуіса вписаного та описаного кола трикутника";}
+
+.tr-sidea-name{
+    position: absolute;
+    top: 450px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-sidea-name::before{content: "Сторона A";}
+
+.tr-sidea-input{
+    position: absolute;
+    top: 480px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.tr-sideb-name{
+    position: absolute;
+    top: 510px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-sideb-name::before{content: "Сторона B";}
+
+.tr-sideb-input{
+    position: absolute;
+    top: 540px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.tr-sidec-name{
+    position: absolute;
+    top: 570px;
+    left: 6.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-sidec-name::before{content: "Сторона С";}
+
+.tr-sidec-input{
+    position: absolute;
+    top: 600px;
+    left: 37.5%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.tr-sidea-input-in, .tr-sideb-input-in, .tr-sidec-input-in{
+    background: rgba(0,0,0,0);
+    border: none;
+    top: -20px;
+    width: 8.33%;
+    position: absolute;
+    cursor: pointer;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.button-s-tr{
+    position: absolute;
+    width: 16.25%;
+    height: 53px;
+    left: 6.67%;
+    top: 650px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #D16464;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.button-s-tr-name{
+    width: 10.08%;
+    height: 25px;
+
+    font-family: 'Nunito';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 25px;
+    background: rgba(0,0,0,0);
+
+    text-transform: uppercase;
+
+    color: #FFFFFF;
+}
+
+.button-s-tr-name::before{content: "обрахувати";}
+
+.tr-plos-name{
+    position: absolute;
+    top: 640px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-plos-name::before{content: "Площа";}
+
+.plos-tr-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-plos-out{
+    position: absolute;
+    top: 670px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.tr-radin-name{
+    position: absolute;
+    top: 700px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-radin-name::before{content: "Вписане коло";}
+
+.tr-radin-out{
+    position: absolute;
+    top: 730px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.radin-tr-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-per-name{
+    position: absolute;
+    top: 760px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-per-name::before{content: "Периметр";}
+
+.tr-per-out{
+    position: absolute;
+    top: 790px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.per-tr-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-radout-name{
+    position: absolute;
+    top: 820px;
+    /* left: 6.67%; */
+    left: 66.67%;
+    font-size: clamp(15px, 2.2vw, 30px);
+
+    background: rgba(0,0,0,0);
+    color: #000000;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.tr-radout-name::before{content: "Описане коло";}
+
+.tr-radout-out{
+    position: absolute;
+    top: 850px;
+    /* left: 20.83%; */
+    left: 83.33%;
+    width: 8.33%;
+    height: 2px;
+
+    background: #000000;
+}
+
+.radout-tr-out{
+    width: 8.33%;
+    height: 20px;
+    background: rgba(0,0,0,0);
+    top: -20px;
+    position: absolute;
+    /* далі — правило масштабування полотна, воно має стояти в кінці файлу */
+    color: black;
+    font-family: 'Nunito';
+    font-style: normal;
+}
+
+.text-f, .text-s, .text-t, .text-fo{color: black}
+
+.button-s-c:hover, .button-s-rect:hover, .button-s-sq:hover, .button-s-tr:hover{
+    box-shadow: 0px 1.5px 3px 0.1px black;
+}
+
+.exit-btn{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: url(https://www.iconpacks.net/icons/2/free-exit-icon-2860-thumb.png);
+    background-size: 100% 100%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+/* Масштабування полотна з розрахунками.
+ *
+ * Панелі намальовані на полотні 1200x1000 жорсткими пікселями: top:400px,
+ * left: 66.67% і так далі — близько тисячі рядків координат. Переписувати їх усі
+ * сенсу немає, тому полотно масштабується цілком, як макет. Коефіцієнт рахує
+ * скрипт, бо в CSS поділити ширину вікна на число не можна.
+ *
+ * Правило стоїть у кінці файлу навмисне: у .circle-task та інших далі за текстом
+ * оголошено margin: 40px auto, і при однаковій специфічності воно перебило б
+ * margin-left, потрібний для центрування полотна.
+ */
+.circle-task, .square-task, .rectangle-task, .triangle-task{
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0;
+    margin-right: 0;
+}

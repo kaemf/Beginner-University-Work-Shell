@@ -1,0 +1,17 @@
+﻿Фотографії семи пам'яток узяті з Вікісховища (Wikimedia Commons) і збережені
+локально: оригінальні посилання в розмітці перестали відповідати, і сторінка
+відкривалася зовсім без ілюстрацій.
+
+Зображення зменшені до тих самих розмірів, які стояли у верстці, якість JPEG 82.
+Вміст не змінювався — це ті самі знімки, лише локальні копії.
+
+  kamianets.jpg    House of Russian City Council (Kamianets-Podilskyi)
+  lavra.jpg        Dormition Cathedral (Києво-Печерська лавра)
+  sofiyivka.jpg    Yman 116 (дендропарк «Софіївка»)
+  sofia.jpg        Софійський собор, Київ
+  chersonesos.jpg  Chersonesos ruins
+  khotyn.jpg       Khotyn Fortress
+  khortytsia.jpg   DneproGES, Хортиця
+
+Джерело кожного файлу — commons.wikimedia.org, ліцензії вільні (CC / PD).
+Сторінка зберігає посилання на відповідні статті Вікіпедії у кнопках «Детальніше».

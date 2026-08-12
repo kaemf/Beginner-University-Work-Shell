@@ -1,0 +1,159 @@
+html{--cr-button-height: 32px;}
+
+body{
+    background-color: rgb(53 54 58);
+    font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+    font-size: 81.25%;
+}
+
+p{color:white;}
+
+img.logo{width: 20%;}
+
+input.search{
+    order: 2;
+    border-radius: 30px;
+    width: 70%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0);
+    border: none;
+    font-size: 17px;
+    margin-left: 3%;
+}
+
+.in_back{
+    margin-top: 3%;
+    border-radius: 30px;
+    width: 40%;
+    height: 50px;
+    font-family: inherit;
+    font-size: 17.5px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img.icon1{
+    cursor: pointer;
+    order: 1;
+    width: 4%;
+    position: relative;
+}
+
+img.icon2{
+    cursor: pointer;
+    position: relative;
+    width: 3%;
+    order: 3;
+    margin-left: 12%;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    text-decoration: underline;
+    color: white;
+}
+
+input.search:focus{
+    border-radius: 13px;
+    outline: none;
+}
+
+input:focus::-webkit-input-placeholder{opacity: 0;}
+input:focus::-moz-placeholder{opacity: 0;}
+input:focus:-moz-placeholder{opacity: 0;}
+input:focus:-ms-input-placeholder{opacity: 0;}
+
+div.customizationButton{
+    transition: all 0.3s;
+    border: none;
+    border-radius: calc(.5 * var(--cr-button-height));
+    box-shadow: 0 3px 6px rgba(0,0,0,.16), 0 1px 2px rgba(0,0,0,.23);
+    font-weight: 400;
+    min-width: 32px;
+    height: 35px;
+    width: 185px;
+
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #202124ff;
+    bottom: 2%;
+    right: 1%;
+    box-shadow: 0 3px 6px rgba(0,0,0,.16), 0 1px 2px rgba(0,0,0,.23);
+}
+
+p.customP{
+    font-weight: 400;
+    margin-left: 2%;
+    position: relative;
+    color: rgb(138, 180, 248);
+}
+
+img.custom{
+    position: relative;
+    width: 10px;
+    filter: invert();
+    margin-inline-end: 8px;
+}
+
+div.customizationButton:hover{
+    background-color: rgb(51, 51, 51);
+}
+
+.customP::before{content: 'Налаштувати Chrome';}
+
+.display_right-add-menu{
+    position: relative;
+    display: flex;
+    margin-top: 10%;
+}
+
+.main-search{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10%;
+}
+
+.right-add-menu{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.flex-add-menu{
+    position: fixed;
+    top: 5%;
+    right: 2%;
+}
+
+a.pictures{
+    margin-left: 2%;
+}
+
+img.menu-icon{
+    cursor: pointer;
+    margin-left: 2%;
+    /* margin-top: 1.5%; */
+    filter: invert(1);
+    width: 2%;
+    height: 2%;
+}
+
+img.profile{
+    cursor: pointer;
+    border-radius: 100%;
+    width: 3.5%;
+    margin-top: -0.8%;
+    margin-left: 2%;
+}

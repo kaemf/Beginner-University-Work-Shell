@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЛР №1 — консольна утиліта (демо у браузері)</title>
+<style>
+  :root {
+    --bg: #14161a;
+    --fg: #d6dae0;
+    --dim: #6f7883;
+    --accent: #9db8ff;
+    --ok: #7fc98a;
+    --err: #e08b8b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: "Cascadia Mono", "SF Mono", Consolas, "Liberation Mono", monospace;
+    font-size: 13.5px;
+    line-height: 1.65;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .bar {
+    flex: 0 0 auto;
+    padding: 9px 16px;
+    border-bottom: 1px solid #262b33;
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .bar b { color: var(--accent); font-weight: 500; }
+
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    min-height: 0;
+  }
+
+  pre { margin: 0; white-space: pre-wrap; word-break: break-word; }
+
+  .echo { color: var(--dim); }
+  .echo b { color: var(--fg); font-weight: 400; }
+  .ok { color: var(--ok); }
+  .err { color: var(--err); }
+
+  form {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid #262b33;
+    background: #171a1f;
+  }
+
+  .prompt { color: var(--accent); white-space: nowrap; }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: var(--fg);
+    font: inherit;
+    padding: 4px 0;
+  }
+
+  input::placeholder { color: #4d545d; }
+
+  .hint {
+    padding: 0 16px 12px;
+    color: var(--dim);
+    font-size: 11.5px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .hint button {
+    background: transparent;
+    border: 1px solid #2d333c;
+    color: var(--dim);
+    font: inherit;
+    font-size: 11px;
+    padding: 2px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+
+  .hint button:hover { border-color: var(--accent); color: var(--accent); }
+</style>
+</head>
+<body>
+
+  <div class="bar">
+    <span>ЛР №1 &middot; консольна утиліта &middot; <b>демо у браузері</b></span>
+    <span>сховище: localStorage замість user.json</span>
+  </div>
+
+  <div class="screen" id="screen"></div>
+
+  <div class="hint" id="hint"></div>
+
+  <form id="form" autocomplete="off">
+    <span class="prompt">node app.js</span>
+    <input id="input" placeholder='list' aria-label="Команда">
+  </form>
+
+<script>
+/*
+ * Порт консольної лабораторної на браузер.
+ *
+ * Логіка команд перенесена з app.js без змін — ті самі перевірки, той самий
+ * порядок дій, ті самі тексти повідомлень. Замінено рівно дві речі:
+ *   fs.readFileSync / writeFileSync  ->  localStorage
+ *   yargs                            ->  розбір рядка нижче
+ *
+ * Оригінальний код лежить поряд: projects/nodejs/lab1/app.js
+ */
+(function () {
+  'use strict';
+
+  var KEY = 'lab1-user-json';
+
+  // початковий стан user.json з репозиторію
+  var SEED = {
+    firstName: 'Yaroslav',
+    lastName: 'Volkivskyi',
+    languages: [
+      { title: 'JS', level: 'Pro' },
+      { title: 'NodeJS', level: 'Beginner' },
+      { title: 'JavaScript', level: 'Junior' }
+    ]
+  };
+
+  // package.json з репозиторію — для команди info
+  var PKG = {
+    name: 'lab1',
+    version: '1.0.0',
+    description: 'Lab1 NodeJS',
+    main: 'task1.js',
+    scripts: { test: 'node task1.js' },
+    keywords: ['nodejs', 'lab', 'task1'],
+    author: 'Yaroslav',
+    license: 'UNLICENSED',
+    dependencies: { lodash: '^4.17.21', user: '^0.0.0', yargs: '^17.7.1' }
+  };
+
+  var screen = document.getElementById('screen');
+  var input = document.getElementById('input');
+
+  /*
+   * Замість autofocus у розмітці.
+   *
+   * У мініатюрі на аркуші архіву фокус забирати не можна: браузер тягне за ним
+   * прокрутку всього аркуша, і той сам собою від'їжджає вниз. У збільшеному
+   * кадрі фокус доречний, але без прокручування.
+   *
+   * Зсередини кадру ці два випадки не розрізнити: з диска (file://) звернення
+   * до батьківського документа кидає помилку. Тому питаємо саму оболонку —
+   * відповідає лише збільшений кадр.
+   */
+  (function () {
+    if (window.parent === window.self) {   // окрема вкладка
+      input.focus();
+      return;
+    }
+
+    parent.postMessage({ __port: 'hello' }, '*');
+    window.addEventListener('message', function (e) {
+      if (e.data && e.data.__port === 'embed') input.focus({ preventScroll: true });
+    });
+  })();
+
+  // ---- сховище (замість fs) ----
+
+  function loadUser() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(SEED)); }
+    catch (e) { return { firstName: '', lastName: '', languages: [] }; }
+  }
+
+  function saveUser(user) {
+    try { localStorage.setItem(KEY, JSON.stringify(user)); } catch (e) { /* приватний режим */ }
+  }
+
+  // ---- вивід ----
+
+  function out(text, cls) {
+    var pre = document.createElement('pre');
+    if (cls) pre.className = cls;
+    pre.textContent = text;
+    screen.appendChild(pre);
+    screen.scrollTop = screen.scrollHeight;
+  }
+
+  function echo(cmd) {
+    var pre = document.createElement('pre');
+    pre.className = 'echo';
+    pre.innerHTML = 'node app.js <b></b>';
+    pre.querySelector('b').textContent = cmd;
+    screen.appendChild(pre);
+  }
+
+  // ---- команди (перенесені з app.js) ----
+
+  function addLanguage(title, level) {
+    var user = loadUser();
+    var isDuplicate = user.languages.find(function (l) { return l.title === title; });
+
+    if (!title || !level) { out('\n  Помилка! Потрібно ввести Мову та Рівень\n', 'err'); return; }
+    if (isDuplicate) { out('\n  Ця мова вже наявна!\n', 'err'); return; }
+
+    user.languages.push({ title: title, level: level });
+    saveUser(user);
+    out('\n  Мова ' + title + ' з рівнем ' + level + ' успішно додані!\n', 'ok');
+  }
+
+  function removeLanguage(title) {
+    var user = loadUser();
+    var i = user.languages.findIndex(function (l) { return l.title === title; });
+
+    if (i === -1) { out('\n  Помилка! Мова не знайдена.\n', 'err'); return; }
+
+    user.languages.splice(i, 1);
+    saveUser(user);
+    out('\n  Мова ' + title + ' була успішно видалена!\n', 'ok');
+  }
+
+  function listLanguages() {
+    var user = loadUser();
+    out('\n  Користувач: ' + user.firstName + ' ' + user.lastName);
+
+    if (user.languages.length === 0) { out('\n  Мова не додана\n'); return; }
+
+    var lines = ['\n  Мови:'];
+    user.languages.forEach(function (l) { lines.push('    - ' + l.title + ' (' + l.level + ')'); });
+    out(lines.join('\n') + '\n');
+  }
+
+  function readLanguage(title) {
+    var user = loadUser();
+    var l = user.languages.find(function (x) { return x.title === title; });
+
+    if (!l) { out('\n  Мова не знайдена\n', 'err'); return; }
+    out('\n  Мова: ' + l.title + '\n  Рівень: ' + l.level + '\n');
+  }
+
+  function aboutProg() {
+    var lines = ['\n  Назва: ' + PKG.name,
+      '  Версія: ' + PKG.version,
+      '  Опис: ' + PKG.description,
+      '  Головний файл (main): ' + PKG.main,
+      '  Скрипти:'];
+    for (var k in PKG.scripts) lines.push('    - ' + PKG.scripts[k]);
+    lines.push('');
+    lines.push('  Автор проекту: ' + PKG.author);
+    lines.push('  Ліцензія: ' + PKG.license);
+    lines.push('  Залежності:');
+    for (var d in PKG.dependencies) lines.push('    - ' + d + ': ' + PKG.dependencies[d]);
+    out(lines.join('\n') + '\n');
+  }
+
+  // ---- розбір рядка (замість yargs) ----
+
+  function parse(line) {
+    var args = {};
+    var re = /--([a-zA-Z]+)=(?:"([^"]*)"|'([^']*)'|(\S+))/g;
+    var m;
+    while ((m = re.exec(line)) !== null) {
+      args[m[1]] = m[2] !== undefined ? m[2] : (m[3] !== undefined ? m[3] : m[4]);
+    }
+    return args;
+  }
+
+  function run(line) {
+    var cmd = line.trim().split(/\s+/)[0];
+    var argv = parse(line);
+
+    switch (cmd) {
+      case 'add':    addLanguage(argv.title, argv.level); break;
+      case 'remove': removeLanguage(argv.title); break;
+      case 'list':   listLanguages(); break;
+      case 'read':   readLanguage(argv.title); break;
+      case 'info':   aboutProg(); break;
+
+      // службові команди демо, в оригіналі їх немає
+      case 'help':   help(); break;
+      case 'clear':  screen.innerHTML = ''; break;
+      case 'reset':
+        saveUser(JSON.parse(JSON.stringify(SEED)));
+        out('\n  Дані повернуто до початкового user.json\n', 'ok');
+        break;
+
+      case '':       break;
+      default:       out('\n  Невідома команда: ' + cmd + '. Спробуй help\n', 'err');
+    }
+  }
+
+  function help() {
+    out([
+      '',
+      '  Команди з оригінальної лабораторної:',
+      '    add --title="JavaScript" --level="Advanced"   додати мову',
+      '    remove --title="JS"                          видалити мову',
+      '    read --title="NodeJS"                        показати одну мову',
+      '    list                                         список усіх мов',
+      '    info                                         дані з package.json',
+      '',
+      '  Додано для демо: help, clear, reset',
+      ''
+    ].join('\n'));
+  }
+
+  // ---- швидкі кнопки ----
+
+  var samples = ['list', 'info', 'add --title="TypeScript" --level="Middle"', 'read --title="JS"', 'remove --title="JS"', 'reset'];
+  var hint = document.getElementById('hint');
+  hint.appendChild(document.createTextNode('спробувати:'));
+  samples.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = s;
+    b.addEventListener('click', function () { input.value = s; input.focus(); });
+    hint.appendChild(b);
+  });
+
+  document.getElementById('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var line = input.value;
+    echo(' ' + line);
+    run(line);
+    input.value = '';
+    screen.scrollTop = screen.scrollHeight;
+  });
+
+  out('  Це та сама програма, тільки в браузері: user.json замінено на localStorage.\n  Оригінальний код — projects/nodejs/lab1/app.js\n');
+  help();
+  listLanguages();
+})();
+</script>
+</body>
+</html>

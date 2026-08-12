@@ -1,0 +1,21 @@
+{
+  "name": "lab1",
+  "version": "1.0.0",
+  "description": "Lab1 NodeJS",
+  "main": "task1.js",
+  "scripts": {
+    "test": "node task1.js"
+  },
+  "keywords": [
+    "nodejs",
+    "lab",
+    "task1"
+  ],
+  "author": "Yaroslav",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "user": "^0.0.0",
+    "yargs": "^17.7.1"
+  }
+}

@@ -1,0 +1,43 @@
+header{
+    margin-top: 200px;
+}
+
+body{
+    background-color: wheat;
+}
+
+.menu *{
+    margin: 10px;
+    padding: 10px;
+}
+
+.menu ul,
+.menu ol {
+    list-style: none;
+}
+.menu > ul {
+    display: flex;
+    justify-content: center;
+}
+
+.menu > ul li a{
+    display: block;
+    background-color: white;
+    padding: 15px 30px 15px 40px;
+    font-size: 15px;
+    color: #877160;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-left: 2px solid #B0C7D8;
+    border-right: 5px solid #B0C7D8;
+    border-top: 4px solid #B0C7D8;
+    border-bottom: 2px solid #B0C7D8;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.menu li a:hover{
+    background: #B0C7D8;
+    transition: all 0.6s ease;
+    color: white;
+}

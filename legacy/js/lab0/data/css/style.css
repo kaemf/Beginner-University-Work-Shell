@@ -1,0 +1,13 @@
+header {
+    border: 1px solid black;
+}
+
+.container {
+    display: grid;
+    border: 1px solid black;
+}
+
+#RandomScript {
+    display: inline-grid;
+    border: 1px solid black;
+}    

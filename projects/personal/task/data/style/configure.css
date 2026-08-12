@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Comfortaa:wght@500&family=Pacifico&family=Yanone+Kaffeesatz&display=swap');
+
+/* Розкладка й оформлення авторські. Виправлено те, через що сторінка трималася
+ * купи лише на авторському вікні (≈1440×700):
+ *
+ * 1. Картки днів починаються на жорстких 250, 500, 750, 1025, 1300, а заввишки
+ *    були 35–38% ВИСОТИ ВІКНА. Крок сталий, висота — ні: на вікні 900px картка
+ *    переростала свій крок і налазила на наступну (заміряно 65–67px перекриття
+ *    на кожній парі). Висоти переведені в пікселі — ті самі, що виходили на
+ *    авторському екрані, тож крок тримається на будь-якій висоті вікна.
+ *
+ * 2. Підпис «НАВІГАЦІЯ» та риска біля нього відмірювалися від ПРАВОГО краю
+ *    навігації (right: 180px і 330px), а сама навігація мала ширину 25% вікна.
+ *    На вужчому екрані 330px виявлялися більшими за саму колонку, і риска з
+ *    підписом виїжджали з неї ліворуч. Тепер вони відмірюються від лівого краю.
+ *
+ * 3. Нижче 980px колонка навігації (фіксована праворуч) наїжджала на картки —
+ *    там вона спускається під розклад. Решта сторінки лишається як була.
+ */
+
+/* Навігація гортає до дня плавно, а не стрибком. Стоїть саме в стилях, а не в
+   скрипті оболонки: тоді воно однаково працює і тут, і коли сторінку відкрито
+   окремо, бо scrollIntoView() без явного behavior бере його з цієї властивості. */
+html{
+    scroll-behavior: smooth;
+}
+
+/* Кому системно вимкнено анімації — тому стрибком, як було. */
+@media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+}
+
+body{
+    background: rgb(199, 199, 199);
+}
+
+.second-title::before{
+    top: 150px;
+    left: 5%;
+    content: 'ТИЖНЕВИЙ РОЗКЛАД';
+    font-size: xx-large;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    position: absolute;
+    font-family: 'Caveat', cursive;
+}
+
+.title-for::before{
+    content: 'РОБОЧІ ДНІ';
+    font-weight: bold;
+    top: 50px;
+    left: 20px;
+    position: absolute;
+    font-size: 40px;
+    font-family: 'Comfortaa', cursive;
+}
+
+.last-text::before{
+    content: 'ВИХІДНІ ДНІ';
+    font-size: 40px;
+    top: 1625px;
+    /* Було 60px від краю ВІКНА. Верхній заголовок «РОБОЧІ ДНІ» лежить усередині
+       аркуша і стоїть на 20px від його краю; цей — сусід аркуша, тож пікселі
+       відмірювались від вікна і збігалися лише на авторській ширині. На 2185px
+       аркуш починається з 65px, і заголовок із рискою опинялись на сірому полі
+       ліворуч від нього. Тепер той самий відступ, але від краю аркуша. */
+    left: calc(3% + 20px);
+    font-weight: bold;
+    color: black;
+    z-index: 2;
+    position: absolute;
+    font-family: 'Comfortaa', cursive;
+}
+
+.first-list{
+    position: absolute;
+}
+
+.second-list{
+    position: absolute;
+}
+
+.third-list{
+    position: absolute;
+}
+
+.fourth-list{
+    position: absolute;
+}
+
+.fiveth-list{
+    position: absolute;
+}
+
+.last-list{
+    position: absolute;
+    padding-left: 65px;
+}
+
+div.title-space{
+    top: -120px;
+    left: 0%;
+    width: 100%;
+    height: 245px;          /* було 35% висоти вікна */
+    position: absolute;
+    background: rgb(57, 57, 134);
+    z-index: 1;
+}
+
+div.first-space{
+    top: 250px;
+    left: 5%;
+    width: 50%;
+    height: 245px;          /* було 35% — крок між картками 250px */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.second-space{
+    top: 500px;
+    left: 5%;
+    width: 50%;
+    height: 245px;          /* було 35% */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.third-space{
+    top: 750px;
+    left: 5%;
+    width: 50%;
+    height: 266px;          /* було 38% — крок 275px */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.fourth-space{
+    top: 1025px;
+    left: 5%;
+    width: 50%;
+    height: 266px;          /* було 38% */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.fiveth-space{
+    top: 1300px;
+    left: 5%;
+    width: 50%;
+    height: 266px;          /* було 38% */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.last-space{
+    top: 1725px;
+    left: 5%;
+    width: 50%;
+    height: 245px;          /* було 35% */
+    position: absolute;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 0px 0px 1px black;
+}
+
+div.main-space{
+    top: 100px;
+    left: 3%;
+    width: 94%;
+    height: 2100px;         /* було 300% висоти вікна — аркуш то не діставав до
+                               кінця розкладу, то тягнувся далеко за нього */
+    position: absolute;
+    background: white;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+ul{
+    z-index: 2;
+}
+
+ol{
+    z-index: 3;
+}
+
+.line-pred{
+    background: black;
+    position: absolute;
+    top: 54px;
+    left: 0px;
+    width: 7px;
+    height: 32px;
+}
+
+.line-last{
+    background: black;
+    position: absolute;
+    top: 1629px;
+    left: 3%;               /* було 40px від вікна — рівняємо на край аркуша,
+                               як риска .line-pred біля «РОБОЧІ ДНІ» */
+    width: 7px;
+    height: 31px;
+}
+
+div.navigation{
+    position: fixed;
+    width: min(356px, 86vw);   /* було 25% вікна */
+    height: 280px;             /* було 40% */
+    /* Сім пунктів меню займають 371px, і ще 30px над ними — підпис «НАВІГАЦІЯ».
+       На вікні нижче ≈700px усе це не влазило і низ просто зрізало краєм екрана
+       — а колонка ж закріплена, догорнути до неї неможливо. Тепер на низькому
+       вікні вона підіймається, але не вище за 34px, щоб і підпис лишався
+       видимим. На 700px і вище стоїть там, де й стояла. */
+    top: clamp(34px, calc(100vh - 400px), 276px);
+    right: 80px;
+    border-radius: 10px;
+}
+
+.text-nav::before{
+    content: 'НАВІГАЦІЯ';
+    position: absolute;
+    top: -30px;
+    left: 33px;                /* було right: 180px від краю колонки */
+    font-size: 25px;
+    font-weight: bold;
+    font-family: 'Comfortaa', cursive;
+}
+
+.line-nav{
+    background: black;
+    position: absolute;
+    top: -27px;
+    left: 19px;                /* було right: 330px */
+    width: 7px;
+    height: 19px;
+}
+
+a{
+    position: relative;
+    padding-left: 20px;
+    text-decoration: none;
+    font-size: 30px;
+    font-family: 'Pacifico', cursive;
+    color: rgb(57, 57, 134);
+}
+
+li{ font-size: 20px; }
+
+a:hover{
+    transition: all 0.3s ease-in-out;
+    color: rgb(114, 114, 252);
+}
+
+#first{ position: absolute; top: 230px;}
+#second{ position: absolute; top: 480px;}
+#third{ position: absolute; top: 730px;}
+#fourth{ position: absolute; top: 1000px;}
+#fiveth{ position: absolute; top: 1275px;}
+
+img.home{
+    position: absolute;
+    width: 20%;
+    top: 5px;
+    right: 151px;
+    z-index: 2;
+}
+
+img.end{
+    position: absolute;
+    width: 20%;
+    top: 5px;
+    right: 153px;
+    z-index: 2;
+    transform: rotate(180deg);
+}
+
+#end{ position: absolute; top: 4000px;}
+
+/* Картка займає 50% ширини, навігація — колонка 356px, притиснута до правого
+   краю з відступом 80px. Разом вони перестають вміщатися приблизно на 970px:
+   нижче цього навігація лягала просто на розклад. Там вона перестає бути
+   фіксованою і спускається під суботу-неділю, а картки займають ширину аркуша. */
+@media (max-width: 980px){
+    div.first-space,
+    div.second-space,
+    div.third-space,
+    div.fourth-space,
+    div.fiveth-space,
+    div.last-space{ width: 88%; }
+
+    div.navigation{
+        position: absolute;
+        top: 2060px;
+        left: 5%;
+        right: auto;
+        height: auto;
+    }
+
+    div.main-space{ height: 2420px; }
+}
+
+/* Зовсім низьке вікно — таке буває і в кадрі архіву. Сім пунктів по 30px не
+   влазять навіть притиснуті до верху, тож меню трохи дрібнішає. */
+@media (min-width: 981px) and (max-height: 470px){
+    div.navigation a{ font-size: 22px; }
+    div.navigation{ top: max(34px, calc(100vh - 300px)); }
+}

@@ -1,0 +1,97 @@
+body{
+    margin-top: 200px;
+}
+
+.dropbtn {
+    background-color: black;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 10px;
+    width: 150px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 10px;
+}
+
+.content a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px;
+}
+
+.dropdown:hover .content {display: block;}
+
+.dropdown:hover .dropbtn {
+    background-color: white; 
+    color:black; 
+    transition: all 0.5s ease;
+}
+
+.content a.f{
+    background-color: red;;
+}
+
+.content a.s{
+    background-color: orange;
+}
+
+.content a.t{
+    background-color: yellow;
+}
+
+.content a.fo{
+    background-color: green;
+}
+
+.content a.fi{
+    background-color: blue;
+}
+
+.content a.si{
+    background-color: indigo;
+}
+
+.content a.f:hover{
+    background-color: rgb(255, 97, 97);;
+    transition: all 0.5s ease-out;
+}
+
+.content a.s:hover{
+    transition: all 0.5s ease-out;
+    background-color: rgb(255, 212, 131);
+}
+
+.content a.t:hover{
+    transition: all 0.5s ease-out;
+    background-color: rgb(255, 255, 146);
+}
+
+.content a.fo:hover{
+    transition: all 0.5s ease-out;
+    background-color: rgb(81, 124, 81);
+}
+
+.content a.fi:hover{
+    transition: all 0.5s ease-out;
+    background-color: rgb(86, 86, 255);
+}
+
+.content a.si:hover{
+    transition: all 0.5s ease-out;
+    background-color: rgb(103, 65, 129);
+}

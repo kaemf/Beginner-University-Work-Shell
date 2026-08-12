@@ -1,0 +1,214 @@
+/* Лабораторна №7 — «Пори року»
+ *
+ * Розкладка перероблена на нормальний потік. В оригіналі майже всі блоки були
+ * position:absolute з відсотковими top (158%, 206%, 247.5%), тому вони не
+ * тримали одне одного і текстові поля наїжджали на зображення. Правила сітки
+ * теж не діяли: вони цілились на img.f/.s/.t/.fo, а ті лежать усередині
+ * .main-content і прямими дітьми сітки не є.
+ *
+ * Оформлення збережене: кольори, заголовок із тінню, кругла кнопка, вертикальний
+ * банер, збільшення знімка по натисканню.
+ */
+
+body {
+  background: rgb(81, 81, 255);
+  margin: 0;
+}
+
+.gridBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+/* ---- кругла кнопка ---- */
+
+div.join {
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  width: 74px;
+  height: 74px;
+  border-radius: 100%;
+  background: black;
+  font-size: 20px;
+  text-align: center;
+  line-height: 74px;
+  z-index: 5;
+  font-family: sans-serif;
+  transition: all 0.5s ease;
+}
+
+span.join_ { color: #fff; }
+
+a { color: #fff; text-decoration: none; }
+
+div.join:hover {
+  border-radius: 20px;
+  font-size: 26px;
+  width: 128px;
+  height: 62px;
+  line-height: 62px;
+}
+
+/* ---- шапка ---- */
+
+div.up {
+  background-color: rgb(0, 0, 124);
+  border-radius: 15px;
+  padding: 44px 20px;
+  box-sizing: border-box;
+}
+
+div.text-center {
+  color: #fff;
+  font-size: clamp(32px, 7vw, 76px);
+  text-shadow: 4px 4px 0px red, -4px -4px 0px rgb(81, 81, 255);
+  text-align: center;
+  font-family: 'Trattatello', fantasy;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+div.text-center::before { content: 'the_'; }
+div.text-center::after { content: '_site'; }
+
+/* ---- знімки та вертикальний банер ---- */
+
+.showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: 18px;
+  align-items: start;
+}
+
+div.main-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;   /* четвертий знімок притиснутий угору, а не по центру */
+}
+
+div.main-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  transition: transform 0.25s ease;
+}
+
+/* Банер стоїть вертикально текстом, а не поворотом усього блока: повернутий
+   елемент лишав по собі порожнє місце горизонтального розміру. */
+div.right {
+  background: #fff;
+  color: #fcac20;
+  border-radius: 10px;
+  box-shadow: inset 25px -25px 20px 0px #fcac20;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+div.text-right {
+  writing-mode: vertical-rl;
+  font-family: 'Trattatello', fantasy;
+  font-size: clamp(20px, 2.4vw, 40px);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ---- три текстові поля ---- */
+
+div.triple-area-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+textarea {
+  resize: none;
+  border-radius: 10px;
+  width: 100%;
+  min-height: 320px;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 0;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- підвал ---- */
+
+div.down {
+  background-color: rgb(0, 0, 124);
+  border-radius: 15px;
+  color: #fff;
+  font-family: 'Trattatello', fantasy;
+  padding: 26px 20px 32px;
+  text-align: center;
+}
+
+div.main-title {
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 1.1;
+}
+
+ul { list-style-type: none; margin: 0; padding-left: 0; }
+
+.menu { text-align: center; font-size: 20px; }
+.menu li { display: inline-block; padding: 14px 15px; }
+
+div.desc-input { font-size: 13px; margin-top: 14px; }
+
+input[type=text] {
+  margin-top: 8px;
+  border-radius: 7px;
+  border: 0;
+  padding: 7px 10px;
+  font-family: inherit;
+}
+
+div.made { margin-top: 18px; }
+
+p.end { display: none; }
+
+/* ---- ефекти ---- */
+
+.menu li a:hover { color: #fcac20; transition: all 0.5s; }
+
+div.main-content img:active { transform: scale(1.5); z-index: 1; position: relative; }
+img.f:active { transform-origin: top left; }
+img.s:active { transform-origin: top right; }
+img.t:active { transform-origin: bottom left; }
+img.fo:active { transform-origin: bottom right; }
+
+/* ---- вузькі екрани ---- */
+
+@media screen and (max-width: 860px) {
+  .showcase { grid-template-columns: minmax(0, 1fr); }
+
+  div.right { min-height: 0; padding: 26px 16px; }
+
+  div.text-right {
+    writing-mode: horizontal-tb;
+    font-size: clamp(20px, 5vw, 34px);
+  }
+}
+
+@media screen and (max-width: 560px) {
+  div.main-content { grid-template-columns: minmax(0, 1fr); }
+
+  div.join { width: 58px; height: 58px; line-height: 58px; font-size: 16px; }
+  div.join:hover { width: 104px; height: 50px; line-height: 50px; font-size: 20px; }
+
+  textarea { min-height: 260px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

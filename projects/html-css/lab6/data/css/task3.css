@@ -1,0 +1,456 @@
+/* Лабораторна №6, завдання 3
+ *
+ * Розкладка авторська: усі позиції лишились такими, як були, у відсотках.
+ * Змінені тільки жорсткі розміри в пікселях — вони й ламали сторінку, бо
+ * позиції масштабувались разом із вікном, а шрифт у 320px і плитки по 322px
+ * лишались незмінними і вилазили за екран.
+ *
+ * Кожен такий розмір узятий у clamp із авторським значенням як максимумом:
+ * від 1280px і ширше сторінка виглядає точно так, як задумано, а на вужчих
+ * екранах усе зменшується пропорційно.
+ */
+
+:root {
+    --menu-w: clamp(120px, 23.8vw, 305px);   /* було 305px */
+    /* Плитки стоять від 55% і йдуть двома колонками, тож їхня сумарна ширина
+       не має вилазити за правий край. min() тримає авторські 322px на широких
+       екранах і підрізає розмір там, де блок інакше не влазить.
+       34vh потрібні, щоб на низькому вікні плитки не вилізли за перший екран. */
+    --tile:   min(clamp(96px, 25.2vw, 322px), calc(20.5vw - 5px), 34vh);   /* було 322px */
+    --square: clamp(46px, min(11.7vw, 16vh), 150px);    /* було 150px */
+}
+
+/* Меню в оригіналі має width:101.6% при left:-1% — саме воно давало
+   горизонтальну смугу прокрутки. Ширину лишаємо авторську, зайве підрізаємо.
+   Підрізаємо лише на html: якщо поставити overflow і на body, той разом із
+   заданою нижче висотою стає контейнером прокрутки, і нижній блок, що лежить
+   за межами 950px, стає недосяжним. */
+html{
+    overflow-x: hidden;
+}
+
+body{
+    background: black;
+    /* Типовий відступ body лишав смугу меню на 8px коротшою з кожного боку. */
+    margin: 0;
+
+    /* Тут головне.
+     *
+     * Уся вертикальна розкладка стоїть на відсотках: top:14.5% у напису,
+     * top:120% і height:85% у нижнього блока, top:93% у стрілки. Відсотки для
+     * абсолютних елементів рахуються від висоти контейнера, а ним було вікно —
+     * тому на низькому вікні сторінка сплющувалась у смужку з порожнечами між
+     * блоками, а на високому розтягувалась. Звідси й незрозуміла прокрутка.
+     *
+     * Задаємо тілу власну висоту — і всі відсотки рахуються вже від неї.
+     * 950px це та висота вікна, під яку сторінку й малювали, тож вигляд
+     * лишається авторським, але тепер однаковим на будь-якому екрані.
+     */
+    position: relative;
+    /* Перший екран має влазити у вікно цілком, тому висота тіла — саме вікно.
+       Усі відсотки (top:14.5%, top:93% у стрілки) рахуються від нього. */
+    height: 100vh;
+    /* Без цього відступи всередині «протікають» назовні й зсувають саме тіло,
+       а разом із ним і відлік відсотків. */
+    display: flow-root;
+}
+
+/* Позначає низ сторінки на позначці двох екранів. Інакше документ закінчувався б
+   на нижньому краї блока, і той не був би відцентрований у другому екрані. */
+body::after {
+    content: "";
+    position: absolute;
+    top: 200%;
+    left: 0;
+    width: 1px;
+    height: 1px;
+}
+
+div.web{
+    position: absolute;
+    color:#84e4fd;
+    left:8%;
+    top:14.5%;
+    font-size: clamp(60px, min(25vw, 34vh), 320px);
+    z-index: 1;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    font-family: 'FreeMono', monospace;
+}
+
+div.web2{
+    position: absolute;
+    color:#84e4fd;
+    font-size: clamp(60px, min(25vw, 34vh), 320px);
+    /* Копія притискалась до низу (bottom:35.6%), а перша — до верху, тому при
+       іншій висоті вікна вони роз'їжджались. Тепер обидві від верху зі зсувом
+       у 0.7% — так само, як зроблено в design/design2. */
+    top:15.2%;
+    left:8.6%;
+    z-index: 0;
+    font-family: 'FreeMono', monospace;
+}
+
+div.design{
+    position: absolute;
+    left:8.2%;
+    font-size: clamp(36px, min(11.7vw, 16vh), 150px);
+    font-family: 'FreeMono', monospace;
+    top:55%;
+    color:#84e4fd;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    z-index: 1;
+}
+
+div.design2{
+    position: absolute;
+    left:8.8%;
+    font-size: clamp(36px, min(11.7vw, 16vh), 150px);
+    font-family: 'FreeMono', monospace;
+    top:54.5%;
+    color:#84e4fd;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+}
+
+/* Плитки стояли на відсотках (55% / 76.2%), а розмір мали в пікселях — тому
+   проміж між ними гуляв разом із шириною вікна. Тепер друга колонка й другий
+   ряд відлічуються від першого через calc, і зазор завжди 10px. */
+div.kwadup{
+    position: absolute;
+    background-color: #8ae4ff;
+    color: #84e4fd;
+    width: var(--tile);
+    height: var(--tile);
+    left:55%;
+    top:11%;
+}
+
+div.kwaddown{
+    position: absolute;
+    background-color: #8ae4ff;
+    color: #84e4fd;
+    width: var(--tile);
+    height: var(--tile);
+    left: calc(55% + var(--tile) + 10px);
+    top: calc(11% + var(--tile) + 10px);
+}
+
+div.radright{
+    position: absolute;
+    background-color: #ffeafb;
+    color: #ffeafb;
+    width: var(--tile);
+    height: var(--tile);
+    top:11%;
+    left: calc(55% + var(--tile) + 10px);
+    border-top-right-radius: 100%;
+}
+
+div.radleft{
+    position: absolute;
+    background-color: #ffeafb;
+    color: #ffeafb;
+    width: var(--tile);
+    height: var(--tile);
+    left:55%;
+    top: calc(11% + var(--tile) + 10px);
+    border-bottom-left-radius: 100%;
+}
+
+.nav {
+    position: absolute;
+    }
+
+    .menu{
+        display: flex;
+        padding-left: 0;
+        /* Було margin-top:-0.6% — на 1920 це підіймало смугу на 11px вище краю
+           вікна, і верх меню зрізало. Тепер рівно нуль: смуга починається від
+           самого краю, без зрізу й без відступу. */
+        margin-top: 0;
+        margin-bottom: 6%;
+        width: 101.6%;
+        z-index: 1;
+        left:-1%;
+        position: relative;
+    }
+
+    .menu li{
+        width: var(--menu-w);
+        list-style: none;
+        position: relative;
+    }
+
+    /* Пункти верхнього рівня мали сталу ширину, тому смуга меню обривалась
+       посеред екрана. Тепер вони ділять усю ширину порівну. Вкладені списки
+       лишаються фіксованими — там ширина потрібна. */
+    .menu>li{
+        background: #333333;
+        flex: 1 1 0;
+        width: auto;
+        min-width: 0;
+    }
+    .menu>li>ul li{
+        background: #2B98FF;
+    }
+    .menu>li>a{
+        border-bottom: 3px solid #2B98FF;
+    }
+
+    .menu a {
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        height: clamp(30px, 3.1vw, 40px);
+        line-height: clamp(30px, 3.1vw, 40px);
+        font-size: clamp(11px, 1.1vw, 16px);
+        /* Було transition: all 0.8s — анімувалося геть усе, зокрема висота й
+           ширина. А вони залежать від vw, тому кожен перерахунок розмірів
+           перетворювався на майже секундну анімацію, і меню смикалось. */
+        transition: background-color 0.18s ease;
+        background: #333333;
+    }
+
+    .menu a:hover {
+        background: #2B98FF;
+        display: block;
+    }
+
+    .menu ul {
+        position: absolute;
+        left: 0;
+        top: 100%;
+        display: none;
+        padding: 0;
+    }
+
+    .menu li:hover > ul {
+        display: block;
+    }
+
+    .menu ul ul {
+        display: none;
+        top: 0;
+        left: var(--menu-w);
+    }
+    .menu li{
+        position: relative;
+    }
+
+    .menu a.main1{
+        width: var(--menu-w);
+    }
+
+    .menu ul li ul li{
+        top:100%;
+    }
+
+div.next{
+    color:white;
+    top:93%;
+    left:50%;
+    position: absolute;
+    font-size: clamp(26px, 3.9vw, 50px);
+}
+
+div.content{
+    /* background-color: gray; */
+    background-color: #84e4fd;
+    border-top-right-radius: 15%;
+    border-bottom-left-radius: 15%;
+    width: 90%;
+    /* Блок не розтягується на весь другий екран, а стоїть у ньому по центру:
+       80% висоти вікна, з рівними полями зверху й знизу по 10%.
+       Було top:120% і height:140% — блок виходив удвічі вищим за вікно, а між
+       ним і першим екраном зяяла чорна прогалина. */
+    height: 80%;
+    top: 110%;
+    position: absolute;
+    left:4.5%
+}
+
+div.end{
+    background-color: #000;
+    width: 1%;
+    height: 1%;
+    position: absolute;
+    top:108%;
+    /* Порожня чорна розпірка, що сиділа на 108% усередині нижнього блока й
+       витягувала сторінку ще на 9% висоти вікна після другого екрана. */
+    display: none;
+}
+
+div.maintitle{
+    position: absolute;
+    /* Заголовок стояв на 5% і майже впирався у верх блока — дали йому повітря. */
+    top: 9%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    font-size: clamp(26px, 5.5vw, 70px);
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+}
+
+.square0, .square1, .square2 {
+    position: relative;
+    border-radius: 10%;
+    height: var(--square);
+    width: var(--square);
+    background-color: #2b98ff;
+    box-shadow: 10px -10px 6px #000000;
+    /* Квадрат центрується над своєю колонкою, а не тулиться до її лівого краю. */
+    margin: 0 auto;
+}
+
+/* Колонка цілком: квадрат, заголовок і підпис ідуть звичайним потоком один за
+   одним усередині обгорток .left / .center / .right, які вже були в розмітці.
+   Раніше кожен із трьох блоків стояв абсолютно на власному відсотку, до того ж
+   з різними відступами зліва (8.3/43/79 у квадратів, 3/35.5/70 у заголовків і
+   1.7/38/70 у підписів) — тому стовпці не збігались, а проміж між заголовком і
+   підписом стрибав залежно від того, у скільки рядків ліг заголовок. */
+div.content > div.left,
+div.content > div.center,
+div.content > div.right {
+    position: absolute;
+    top: 26%;
+    width: 28%;
+    text-align: center;
+}
+
+div.content > div.left   { left: 4%; }
+div.content > div.center { left: 36%; }
+div.content > div.right  { left: 68%; }
+
+
+div.titlel{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 3%;
+    top: 45%;
+    font-size: clamp(13px, 2.3vw, 30px);
+}
+
+div.titlec{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 35.5%;
+    top: 45%;
+    font-size: clamp(13px, 2.3vw, 30px);
+}
+
+div.titler{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 70%   ;
+    top: 45%;
+    font-size: clamp(13px, 2.3vw, 30px);
+}
+
+div.mainl{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 1.7%;
+    top: 58%;
+    font-size: clamp(9px, 1.4vw, 18px);
+}
+
+div.mainc{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 38%;
+    top: 58%;
+    font-size: clamp(9px, 1.4vw, 18px);
+}
+
+div.mainr{
+    position: absolute;
+    font-family: 'Andale Mono', monospace;
+    color: white;
+    text-shadow: 1px 0 1px #000,
+    0 1px 1px #000,
+    -1px 0 1px #000,
+    0 -1px 1px #000;
+    left: 70%;
+    top: 58%;
+    font-size: clamp(9px, 1.4vw, 18px);
+}
+
+img.inim{
+    position: absolute;
+    left:25%;
+    top:40%;
+}
+
+/* Скидання має стояти в кінці файлу: авторські правила div.titlel, div.mainl і
+   решта оголошені нижче за обгортки, а при однаковій специфічності виграє те,
+   що йде останнім. Тут квадрат, заголовок і підпис повертаються у потік своєї
+   колонки, тож відступи між ними стають однаковими незалежно від того, у
+   скільки рядків ліг заголовок. */
+div.imgleft, div.imgcenter, div.imgright,
+div.titlel, div.titlec, div.titler,
+div.mainl, div.mainc, div.mainr {
+    position: static;
+    left: auto;
+    top: auto;
+    width: auto;
+    text-align: center;
+}
+
+div.imgleft, div.imgcenter, div.imgright { margin-bottom: 24px; }
+div.titlel, div.titlec, div.titler       { margin-bottom: 16px; }
+
+/* Іконка всередині квадрата. Намальована лініями в SVG, тому масштабується
+   без втрат і не тягне нічого із зовнішніх джерел. */
+.square0, .square1, .square2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+img.inim {
+    position: static;
+    left: auto;
+    top: auto;
+    width: 52%;
+    height: auto;
+}
+

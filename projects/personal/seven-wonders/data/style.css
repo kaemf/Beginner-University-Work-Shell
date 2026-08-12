@@ -1,0 +1,560 @@
+/* 7 чудес України — редизайн
+ *
+ * Структура авторська: угорі плашка із заголовком, далі картки пам'яток, унизу
+ * підпис із роком. Градієнт на тлі й білі картки з м'якою тінню теж звідти —
+ * це впізнаваний вигляд роботи, його лишаємо.
+ *
+ * Що інакше: картки стали сіткою квадратиків замість широких рядів на весь
+ * екран; типографіка розведена на три рівні замість одного Impact; збільшення
+ * знімка при наведенні прибрано (натомість підіймається сама картка); знімок
+ * тепер відкривається переглядачем із масштабом і перетягуванням, а
+ * «Детальніше» більше нікуди не веде — стаття підтягується у вікно поруч.
+ *
+ * Оригінал лежить у legacy/ і вмикається кнопкою «Оригінал» у шапці кадру.
+ */
+
+:root {
+  --ink:      #201430;
+  --ink-2:    #574a68;
+  --ink-3:    #8b7fa0;
+  --card:     #ffffff;
+  --rule:     #ece7f2;
+  --accent:   #7b2ff7;
+  --accent-2: #f5317f;
+
+  --display: Impact, Haettenschweiler, "Arial Narrow Bold", "Oswald", sans-serif;
+  --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+
+  --shadow: 0 10px 30px rgba(32, 10, 60, 0.18);
+  --shadow-lift: 0 22px 48px rgba(32, 10, 60, 0.28);
+  --radius: 20px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  /* Той самий рожево-фіолетовий, що в оригіналі, але приглушений: у повну силу
+     він перекрикував самі знімки, а вони тут головні. */
+  background:
+    radial-gradient(70% 50% at 12% -5%, rgba(255, 209, 212, 0.55) 0%, transparent 60%),
+    radial-gradient(60% 55% at 88% 8%, rgba(255, 155, 159, 0.4) 0%, transparent 60%),
+    linear-gradient(165deg, #4a2178 0%, #3a1c86 45%, #1e0f33 100%);
+  background-attachment: fixed;
+}
+
+.flex-main-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(18px, 3.5vw, 44px) clamp(14px, 3vw, 32px) 0;
+}
+
+/* ---- плашка із заголовком ---- */
+
+.title {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(26px, 4.5vw, 54px) clamp(22px, 4vw, 56px);
+  text-align: center;
+  animation: rise 0.75s cubic-bezier(0.22, 0.68, 0.3, 1) both;
+}
+
+.title-kicker {
+  margin: 0 0 14px;
+  font-size: 11.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.title h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(38px, 9vw, 96px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  background: linear-gradient(96deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.title-lede {
+  margin: 18px auto 0;
+  max-width: 56ch;
+  font-size: clamp(14px, 1.5vw, 16px);
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+/* ---- сітка карток ---- */
+
+/*
+ * Сім — незручне число для рівної сітки: у три колонки останній ряд лишається
+ * з однією карткою і двома дірками. Тому перша йде на всю ширину, а решта шість
+ * лягають рівно: 3 + 3 на широкому, 2 + 2 + 2 на середньому, стовпчиком на
+ * вузькому. Дірок не лишається на жодній ширині.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(16px, 2.2vw, 26px);
+  margin: clamp(20px, 3vw, 36px) 0 0;
+}
+
+@media (min-width: 660px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+.card.feature { grid-column: 1 / -1; }
+
+/* На широкому екрані перша картка розгортається вбік — знімок ліворуч, текст
+   праворуч. Це відлуння авторських широких рядів, з яких робота й починалась. */
+@media (min-width: 860px) {
+  .card.feature { flex-direction: row; }
+  .card.feature .card-shot { flex: 0 0 46%; aspect-ratio: auto; }
+  .card.feature .card-body { justify-content: center; padding: clamp(26px, 3.2vw, 46px); }
+  .card.feature .title-content { font-size: clamp(26px, 3vw, 40px); margin-bottom: 14px; }
+  .card.feature .text-content { font-size: 16px; line-height: 1.7; max-width: 52ch; }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.35s ease;
+}
+
+/* Картка з'являється, коли доходить до екрана. Клас вішає скрипт. */
+.card { opacity: 0; transform: translateY(22px); }
+.card.in { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 0.68, 0.3, 1), box-shadow 0.35s ease; }
+
+.card.in:hover { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+
+/* Знімок. Наведення більше не збільшує картинку — рухається вся картка. */
+.card-shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: #efeaf5;
+  cursor: zoom-in;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Легка вуаль, щоб було видно, що знімок клікабельний. */
+.card-shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(32, 10, 60, 0.28));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.card-shot:hover::after,
+.card-shot:focus-visible::after { opacity: 1; }
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: clamp(18px, 2vw, 24px);
+}
+
+/* Номер і місце. Дають карткам спільний ритм — без цього рядка ті, у яких опис
+   коротший, виглядали напівпорожніми. */
+.card-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.card-meta b {
+  font-family: var(--display);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  background: linear-gradient(96deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.title-content {
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.text-content {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--ink-2);
+}
+
+.link { margin-top: auto; padding-top: 6px; border-top: 1px solid var(--rule); }
+
+/* Не пігулка, а рядок зі стрілкою: на картці й так уже багато заокруглень. */
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.more::after {
+  content: "→";
+  transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.more:hover { color: var(--accent-2); }
+.more:hover::after { transform: translateX(5px); }
+
+/* ---- підвал ---- */
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: clamp(20px, 3vw, 34px) 0 0;
+  padding: 18px clamp(18px, 2.4vw, 28px);
+  background: var(--card);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.copyright { width: 20px; height: 20px; flex: 0 0 auto; }
+.author::before { content: "Junior Fullstack Developer YAROSLAV VOLKIVSKYI"; }
+.date { margin-left: auto; color: var(--ink-3); }
+.date::before { content: attr(year); }
+
+/* ---- вікно зі статтею ---- */
+
+#overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(14px, 3vw, 40px);
+  background: rgba(24, 8, 40, 0.72);
+  backdrop-filter: blur(3px);
+  animation: fade 0.25s ease both;
+}
+
+#overlay[hidden] { display: none; }
+
+#modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(840px, 100%);
+  max-height: 100%;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  animation: pop 0.32s cubic-bezier(0.22, 0.9, 0.3, 1) both;
+  overflow: hidden;
+}
+
+/* Шапка стоїть на місці, гортається сам текст — стаття буває довга. */
+.modal-head {
+  flex: 0 0 auto;
+  padding: clamp(22px, 3vw, 34px) clamp(22px, 3.4vw, 40px) 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+#modal-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(20px, 2.6vw, 30px) clamp(22px, 3.4vw, 40px) clamp(22px, 3vw, 34px);
+}
+
+#modal h2 {
+  margin: 0 40px 6px 0;
+  font-family: var(--display);
+  font-size: clamp(21px, 2.7vw, 28px);
+  font-weight: 400;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+#modal-body h3,
+#modal-body h4 {
+  clear: both;
+  margin: 26px 0 10px;
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+#modal-body h3 {
+  font-size: 19px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+#modal-body h4 { font-size: 15px; color: var(--ink-2); margin-top: 20px; }
+#modal-body > *:first-child { margin-top: 0; }
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modal-close:hover { background: var(--rule); color: var(--ink); }
+
+.modal-source {
+  margin: 0 0 18px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.modal-figure {
+  float: right;
+  width: min(240px, 42%);
+  margin: 0 0 16px 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--rule);
+}
+
+.modal-figure img { width: 100%; display: block; }
+
+#modal-body p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.modal-list {
+  clear: both;
+  margin: 0 0 14px;
+  padding-left: 20px;
+  color: var(--ink-3);
+}
+
+.modal-list li {
+  margin-bottom: 7px;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.modal-foot {
+  clear: both;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.modal-foot a {
+  color: var(--accent);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.modal-foot a:hover { text-decoration: underline; }
+
+.modal-state {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(--rule);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ---- переглядач знімка ---- */
+
+#viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  background: rgba(14, 5, 24, 0.94);
+  animation: fade 0.25s ease both;
+}
+
+#viewer[hidden] { display: none; }
+
+.viewer-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px clamp(14px, 2.4vw, 26px);
+  color: #efe9f6;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.viewer-name {
+  font-family: var(--display);
+  font-size: 17px;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.viewer-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.viewer-tools button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: #efe9f6;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.viewer-tools button:hover { background: rgba(255, 255, 255, 0.12); border-color: transparent; }
+#zoom-fit { font-size: 12px; }
+
+.viewer-zoom {
+  min-width: 5ch;
+  text-align: center;
+  font-size: 12px;
+  color: #b9aecb;
+  font-variant-numeric: tabular-nums;
+}
+
+.viewer-stage {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+}
+
+.viewer-stage.dragging { cursor: grabbing; }
+
+#modal-img {
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center center;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+#modal-img.smooth { transition: transform 0.28s cubic-bezier(0.2, 0.7, 0.3, 1); }
+
+.viewer-hint {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 12px;
+  text-align: center;
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: #8f83a3;
+}
+
+/* ---- рух ---- */
+
+@keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop  { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .title, #overlay, #modal, #viewer { animation: none; }
+  .card { opacity: 1; transform: none; transition: none; }
+  .card.in:hover { transform: none; }
+  #modal-img.smooth { transition: none; }
+  .spinner { animation: none; }
+}
+
+@media (max-width: 560px) {
+  .modal-figure { float: none; width: 100%; margin: 0 0 16px; }
+  .viewer-hint { display: none; }
+  #zoom-fit { display: none; }
+}

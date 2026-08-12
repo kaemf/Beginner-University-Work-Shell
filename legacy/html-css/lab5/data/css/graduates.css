@@ -1,0 +1,214 @@
+/* Лабораторна №5, частина 6 — «Наші випускники»
+ *
+ * Авторський дизайн збережений: кремове полотно на радіальному градієнті,
+ * шапочка випускника ліворуч від заголовка, риска під ними, далі три
+ * випускники — кругле фото з посадою під ним ліворуч, цитата у великих лапках
+ * і підпис праворуч.
+ *
+ * Перероблено тільки те, через що сторінка трималася купи виключно на
+ * авторському екрані: кожне фото й кожен абзац стояли position:absolute з
+ * відступами в пікселях (margin-top: 730px, margin-left: 530px і так далі), а
+ * полотно, шапочка й лапки мали розміри у відсотках від вікна, не від колонки.
+ * Одне звужувалося з вікном, друге стояло на місці, тож на 800px полотно було
+ * завширшки 471px, а цитата тягнулася до 735px — текст ішов повз кремове поле
+ * на градієнт і за край сторінки, з горизонтальною прокруткою.
+ *
+ * Тепер ліва колонка — плаваючий блок, права — звичайний потік, а розміри
+ * рахуються від полотна. Пропорції ті самі на будь-якій ширині; на вузькому
+ * екрані колонки стають одна під одну.
+ *
+ * Числа взяті з обміру оригіналу на 1920px: полотно 1143px, фото 170px,
+ * заголовок 28px (2em від 14px), цитата на 300px від краю колонки, підпис — ще
+ * на 230px правіше за неї.
+ */
+
+body {
+  /* Колонка, у якій живе вся сторінка. В оригіналі — 60% ширини вікна; тепер
+     та сама частка, але з межею, щоб на широкому моніторі рядок не
+     розтягувався, а на вузькому лишалась смужка градієнта з боків. */
+  --sheet: min(1040px, 100% - 40px);
+  --pad: clamp(18px, 3vw, 34px);
+  --title: clamp(21px, 2.2vw, 28px);     /* в оригіналі 28px — 2em від 14px */
+  /* Шапочка міряється від заголовка, а не від вікна: в оригіналі вона була 6%
+     ширини вікна й на широкому екрані виростала втричі за текст, звисаючи на
+     риску. У полі картинки 15% порожнечі згори й знизу, тож видима частина —
+     приблизно 1.3 висоти заголовка. */
+  --cap: calc(var(--title) * 1.9);
+  --gutter: 290px;                   /* ліва колонка: фото 170px + повітря */
+  --hang: min(28px, var(--pad) - 4px);   /* наскільки лапки звисають за текст */
+
+  position: relative;
+  margin: 0;
+  padding: 0 0 54px;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  background-color: #fff;
+  background-image: radial-gradient(circle, #5b4ffc, #df0253);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* <p><h1>…</h1></p> браузер розбирає на порожній абзац, заголовок і ще один
+   порожній абзац. Ці двоє нічого не несуть, лишились би тільки їхні відступи. */
+body > p { display: none; }
+
+/* Полотно, що в оригіналі стояло за текстом із z-index: -1. Висота там була
+   163% від вікна — вгадана під авторський екран; тепер це просто вся сторінка. */
+img.back {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--sheet);
+  height: 100%;
+  z-index: -1;
+}
+
+/* ---- шапка ---- */
+
+h1,
+body > div {
+  width: var(--sheet);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+  box-sizing: border-box;
+}
+
+h1 {
+  padding-top: 38px;
+  padding-left: calc(var(--pad) + var(--cap) + 18px);   /* місце під шапочку */
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  font-size: var(--title);
+  line-height: 1.2;
+}
+
+/* Шапочка лежить у наступному блоці, а стояти мусить поруч із заголовком —
+   тому вона єдина лишилась абсолютною. Прив'язана до лівого краю полотна, а
+   по вертикалі — до середини рядка заголовка (0.6 = половина line-height). */
+img.main {
+  position: absolute;
+  top: calc(38px + var(--title) * 0.6 - var(--cap) / 2);
+  left: calc(50% - var(--sheet) / 2 + var(--pad));
+  width: var(--cap);
+  height: var(--cap);
+  object-fit: contain;
+}
+
+hr {
+  width: 100%;
+  margin: 20px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+}
+
+/* Шапочка висить абсолютно і власної висоти блоку не додає — запас відділяє
+   риску від першого фото. */
+body > div:first-of-type { padding-bottom: 40px; }
+
+/* ---- випускник ---- */
+
+body > div:nth-of-type(n + 2) {
+  display: flow-root;      /* тримає плаваючі фото й посаду всередині блока */
+  margin: 0 auto 46px;
+}
+
+/* фото */
+body > div:nth-of-type(n + 2) > img {
+  float: left;
+  clear: left;
+  width: 170px;
+  height: auto;
+  margin: 4px 0 18px 16px;
+  border-radius: 50%;
+}
+
+/* посада — під фото, по його центру */
+body > div:nth-of-type(n + 2) > center {
+  float: left;
+  clear: left;
+  width: 202px;
+}
+
+body > div:nth-of-type(n + 2) p {
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+}
+
+/* Жорсткі переноси прибрані: вони були розставлені під одну ширину рядка і на
+   будь-якій іншій рвали текст на короткі уривки. */
+body > div:nth-of-type(n + 2) br { display: none; }
+
+/* цитата */
+body > div:nth-of-type(n + 2) > p:nth-of-type(1) {
+  position: relative;
+  max-width: 48ch;
+  margin: 18px 0 0 var(--gutter);
+}
+
+/* підпис під цитатою */
+body > div:nth-of-type(n + 2) > p:nth-of-type(2) {
+  margin: 24px 0 0 var(--gutter);
+  padding-left: min(230px, 22%);
+}
+
+body > div:nth-of-type(n + 2) > center p { margin: 0; }
+
+/* Лапки в оригіналі висіли по кутах цитати, а не стояли в рядку з текстом.
+   Звис прив'язаний до поля полотна, інакше на вужчому екрані права лапка
+   вилазила з кремового поля на градієнт. */
+img.fquote-m,
+img.squote-m {
+  position: absolute;
+  width: 20px;
+  height: auto;
+}
+
+img.fquote-m { left: calc(-1 * var(--hang)); top: -4px; transform: rotate(180deg); }
+img.squote-m { right: calc(-1 * var(--hang)); bottom: -4px; }
+
+/* ---- вузькі екрани ---- */
+
+@media (max-width: 680px) {
+  body > div:nth-of-type(n + 2) {
+    display: grid;                       /* заразом скасовує обтікання */
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 16px;
+  }
+
+  /* Порядок задаємо тут, бо в розмітці посада стоїть після цитати, а під фото
+     їй місце одразу за ним. */
+  body > div:nth-of-type(n + 2) > img {
+    order: 1;
+    justify-self: center;
+    width: 150px;
+    margin: 0;
+  }
+
+  body > div:nth-of-type(n + 2) > center { order: 2; width: auto; }
+
+  body > div:nth-of-type(n + 2) > p:nth-of-type(1) {
+    order: 3;
+    max-width: none;
+    margin: 0;
+    padding: 0 26px;
+  }
+
+  body > div:nth-of-type(n + 2) > p:nth-of-type(2) {
+    order: 4;
+    margin: 0;
+    padding-left: 26px;
+  }
+
+  img.fquote-m { left: 0; }
+  img.squote-m { right: 0; }
+
+  /* Шапочка стає над заголовком, обоє по центру. */
+  img.main { top: 22px; left: 50%; transform: translateX(-50%); }
+
+  h1 {
+    padding-left: var(--pad);
+    padding-top: calc(22px + var(--cap) + 10px);
+    text-align: center;
+  }
+}

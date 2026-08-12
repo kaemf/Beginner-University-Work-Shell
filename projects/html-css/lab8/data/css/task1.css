@@ -1,0 +1,183 @@
+.container-1{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: space-between;
+    background-color: dodgerblue;
+    color: white;
+}
+
+.container-1 > div{ padding: 5px;}
+.container-1 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-2{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row-reverse;
+    width: 80%;
+    justify-content: space-between;
+    background-color: dodgerblue;
+    color: white;
+}
+
+.container-2 > div{ padding: 5px;}
+.container-2 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-3{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row-reverse;
+    width: 80%;
+    justify-content: center;
+    background-color: dodgerblue;
+    color: white;
+}
+
+.container-3 > div{ padding: 5px;}
+.container-3 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-4{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: center;
+    background-color: dodgerblue;
+    color: white;
+    align-items: stretch;
+    text-align: center;
+}
+
+.container-4 > div{ 
+    padding: 5px;
+    border: 1px solid blue
+}
+
+.container-4 > div:hover{
+     color: dodgerblue;
+     background-color: white;
+}
+
+.container-5{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: center;
+    background-color: dodgerblue;
+    color: white;
+    align-items: center;
+    text-align: center;
+}
+
+.container-5 > div{ 
+    padding: 5px;
+    border: 1px solid blue
+}
+
+.container-5 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-6{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: flex-end;
+    background-color: dodgerblue;
+    color: white;
+    align-items: center;
+    text-align: center;
+}
+
+.container-6 > div{ 
+    padding: 5px;
+    border: 1px solid blue
+}
+
+.container-6 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-7{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row-reverse;
+    width: 80%;
+    justify-content: flex-start;
+    background-color: dodgerblue;
+    color: white;
+    align-items: center;
+    text-align: center;
+}
+.container-7 > div{ 
+    padding: 5px;
+    border: 1px solid blue
+}
+
+.container-7 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+.container-8{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: dodgerblue;
+    color: white;
+    align-items: center;
+    text-align: center;
+}
+
+.container-8 > div{ 
+    padding: 5px;
+}
+
+.container-8 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+.container-9{
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    background-color: dodgerblue;
+    color: white;
+    text-align:left;
+}
+
+.container-9 > div{ 
+    padding: 9px;
+    border: 1px solid blue
+}
+
+.container-9 > div:hover{
+    color: dodgerblue;
+    background-color: white;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    color: dodgerblue;
+}

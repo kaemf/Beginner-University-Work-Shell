@@ -1,0 +1,325 @@
+body{
+    background: linear-gradient(270deg, gray, white);
+}
+
+div.upback{
+    background-color: white;
+    position: absolute;
+    width: 90%;
+    height: 40%;
+    left: 4.81%;
+    top:5%;
+    color: white;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+div.head{
+    position: absolute;
+    background-color: black;
+    width: 95%;
+    height: 60%;
+    left: 2%;
+    top: 5%;
+    color: black;
+}
+
+div.profile{
+    position: absolute;
+    background-color: white;
+    width: 11.5%;
+    height: 50%;
+    z-index: 1;
+   /*  box-shadow: 1px 0 1px #000, 
+    0 1px 1px #000, 
+    -1px 0 1px #000, 
+    0 -1px 1px #000; */
+    box-shadow: 0px 0px 1px 2px green;
+    left: 5%;
+    top: 40%;
+}
+
+img.profile{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+img.prof-cont{
+    width: 100%;
+    height: 100%;
+}
+
+div.name{
+    position: absolute;
+    color:black;
+    left: 18%;
+    top: 77%;
+    font-family: 'FreeMono', monospace;
+    font-size: 30px;
+}
+
+div.maininfo{
+    position: absolute;
+    background-color: white;
+    width: 90%;
+    height: 10%;
+    top: 48%;
+    left: 4.81%;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+div.description{
+    background-color: white;
+    position: absolute;
+    width: 90%;
+    height: 20%;
+    left: 4.81%;
+    top: 61%;
+    font-family: 'FreeMono', monospace;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+div.content{
+    background-color: white;
+    position: absolute;
+    width: 90%;
+    height: 180%;
+    left: 4.81%;
+    top: 84%;
+    font-family: 'FreeMono', monospace;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+div.end{
+    position: absolute;
+    top: 270%;
+    width: 99%;
+}
+
+textarea{
+    resize: none;
+    position: absolute;
+    left: 1%;
+    top: 2%
+}
+
+div.btn{
+    left:1%;
+    top:7%;
+    position: absolute;
+}
+
+div.btn:hover{
+    transform: rotate(-0.015turn);
+}
+
+img.first:active{
+    transform: scale(2);
+    z-index: 1;
+    left: 80%;
+}
+
+img.second:active{
+    transform: scale(2);
+    z-index: 1;
+    left: 60%;
+}
+
+img.third:active{
+    transform: scale(2);
+    z-index: 1;
+    left: 180%;
+}
+
+img.profile:active{
+    transform: scale(2.3);
+    z-index: 1;
+    left: 50%;
+}
+
+div.imgf{
+    position: absolute;
+    left: 1%;
+    top: 12%;
+    box-shadow: 0px 0px 1px 1px green;
+    z-index: 1;
+    height: 6%;
+    width: 6%;
+}
+
+div.text-first{
+    position: absolute;
+    left: 8.5%;
+    top: 12%;
+}
+
+img.first{
+    position: absolute;
+    left: 8%;
+    top: 180%;
+    width: 200%;
+}
+
+div.imgs{
+    position: absolute;  
+    top: 40%;
+    left: 1%;
+    box-shadow: 0px 0px 1px 1px green;
+    height: 6%;
+    width: 6%;
+}
+
+div.text-second{
+    position: absolute;
+    left: 8.5%;
+    top: 40%;
+}
+
+img.second{
+    position: absolute;
+    left: 6%;
+    top: 200%;
+    width: 150%;
+}
+
+div.imgt{
+    position: absolute;
+    left: 1%;
+    top: 72.5%;
+    box-shadow: 0px 0px 1px 1px green;
+    height: 6%;
+    width: 6%;
+}
+
+div.text-third{
+    position: absolute;
+    left: 8.5%;
+    top: 72.5%;
+}
+
+img.third{
+    position: absolute;
+    left: 10%;
+    top: 165%;
+}
+
+div.endl{
+    position: absolute;
+    background-color: white;
+    width: 90%;
+    height: 5%;
+    top: 268%;
+    left: 4.81%;
+    box-shadow: 0px 0px 1px 1px black;
+}
+
+div.text1{
+    position: absolute;
+    left: 1%;
+    top: 25%;
+}
+
+div.text2{
+    position: absolute;
+    right: 1%;
+    top: 25%;
+}
+
+table{
+    border: 1px solid black;
+}
+
+table.-f{
+    position: relative;
+    left: 5%;
+    top: 30%;
+}
+
+table.-s{
+    position: absolute;
+    left:15%;
+    top:30%;
+}
+
+table.-t{
+    position: absolute;
+    left: 28%;
+    top: 30%;
+}
+
+table.-fr{
+    position: absolute;
+    left: 42%;
+    top: 30%;
+}
+
+table.-fv{
+    position: absolute;
+    left: 58%;
+    top: 30%;
+}
+
+table.-sx{
+    position: absolute;
+    left: 80%;
+    top: 30%;
+}
+
+div.date-f{
+    position: absolute;
+    left: 10%;
+    top: 1550%;
+    color: gray;
+}
+
+div.date-s{
+    position: absolute;
+    left: 10%;
+    top: 1950%;
+    color: gray;
+}
+
+div.date-t{
+    position: absolute;
+    width: 200%;
+    left: 20%;
+    top: 1400%;
+    color: gray;
+}
+
+hr.up{
+    position: absolute;
+    width: 99.85%;
+    top:10%;
+}
+
+hr.up0{
+    position: absolute;
+    width: 99.85%;
+    top:96%;
+}
+
+hr.down{
+    position: absolute;
+    width: 99.85%;
+    top:36%;
+}
+
+hr.down0{
+    position: absolute;
+    width: 99.85%;
+    top:69%;
+}
+
+div.maindes{
+    position: absolute;
+    left:2%;
+    top:8%;
+    font-size: 30px;
+}
+
+div.contdes{
+    position: absolute;
+    top: 35%;
+    left: 2%;
+}

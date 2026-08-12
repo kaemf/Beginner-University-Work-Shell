@@ -1,0 +1,200 @@
+<html>
+<html lang='ru'>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comforter+Brush&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="data/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="data/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="data/favicon-16x16.png">
+    <link rel="manifest" href="data/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="data/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Button_Animation</title>
+</head>
+
+<style>
+    /* Розкладка перероблена на потік. В оригіналі все стояло на жорстких
+       пікселях: смуга шириною 1000px на left:180px, кнопки на left:270px,
+       написи всередині них — на власному left:250px. Автор і сам попереджав у
+       повідомленні, що сторінка розрахована лише на 1366×768.
+       Оформлення й поведінка кнопок збережені. */
+
+    body{
+        margin: 0;
+        padding: 16px 16px 48px;
+        background-color: gray;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
+    div.message{
+        position: relative;
+        box-sizing: border-box;
+        width: min(1400px, 100%);
+        margin: 0 auto 28px;
+        /* Праворуч місця більше — там у кутку стоїть хрестик. */
+        padding: 18px 52px 16px 24px;
+        background: blue;
+        color: white;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        animation-duration: 1.3s;
+        animation-name: message;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    div.message::before{
+        content: 'Yaroslav';
+        display: block;
+        font-weight: 600;
+        margin-bottom: 2px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Рік стояв на float: right і тому спливав у той самий кут, що й хрестик,
+       налазячи на нього. Тепер це окремий рядок, вирівняний по правому краю. */
+    div.message::after{
+        content: '2022';
+        display: block;
+        text-align: right;
+        margin-top: 10px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    div.atent::after{
+        content: 'Сайт оптимізований тільки під роздільню здатність дисплея 1366Х768, в інших випадках можуть бути проблеми з відображенням об`єктів на сайті.';
+        display: block;
+        margin-top: 12px;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    /* Хрестик стояв на float: right і, оскільки в розмітці йде після блоку з
+       текстом, обтікання зносило його вниз — до року. Прибиваємо до верхнього
+       правого кута плашки, як і має бути в кнопки закриття. */
+    .exit-m{
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .exit-m:hover{
+        transform: rotate(180deg);
+    }
+
+    div.title{
+        font-family: 'Comforter Brush', cursive;
+        font-size: clamp(34px, 7vw, 80px);
+        line-height: 1.2;
+        text-align: center;
+        margin-bottom: 34px;
+        overflow-wrap: anywhere;
+    }
+
+    @keyframes message {
+        from{
+            opacity: 0;
+            filter: blur(2px);
+        }
+
+        to{
+            opacity: 0.7;
+        }
+    }
+
+    div.title::before{
+        content: "Перехід до пошукової системи:";
+    }
+
+    /* Кнопки стоять у потоці й центруються самі. Напис усередині більше не
+       позиціюється абсолютно з власним left — він просто по центру кнопки. */
+    div.first-link, div.second-link{
+        position: relative;
+        box-sizing: border-box;
+        width: min(60%, 900px);
+        min-width: min(260px, 100%);
+        margin: 0 auto 26px;
+        padding: 0.28em 0.5em;
+        background-color: white;
+        border-radius: 100px;
+        text-align: center;
+        line-height: 1.35;
+        font-size: clamp(38px, 8vw, 100px);
+        transition: all .3s ease;
+        overflow-wrap: anywhere;
+    }
+
+    div.first-link{
+        font-family: 'Noto Sans', sans-serif;
+    }
+
+    div.first-link::before{
+        content: 'Google';
+    }
+
+    div.second-link{
+        font-family: 'Nunito Sans', sans-serif;
+    }
+
+    div.second-link::before{
+        content: 'yahoo!';
+        font-family: 'Nunito Sans', sans-serif;
+    }
+
+    /* Зсув при наведенні лишився, але у частках ширини, а не в пікселях:
+       раніше було left:220px і left:310px, що працювало тільки на 1366. */
+    div.first-link:hover{
+        background: rgb(61, 61, 61);
+        color: white;
+        transform: translateX(-4%);
+    }
+
+    div.second-link:hover{
+        background: rgb(61, 61, 61);
+        color: #6001d0;
+        transform: translateX(4%);
+        text-shadow: 1px 1px 1.5px white;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        * { transition: none !important; animation: none !important; }
+    }
+
+</style>
+
+<body link="red" link="green" vlink="blue" text="black">
+
+    <div class="message">
+        <div class="atent"></div>
+        <span class="exit-m" onclick="this.parentElement.style.display='none';">&times;</span>
+    </div>
+
+    <div class="title"></div>
+
+    <a style="color: gray;" target="_blank" href="https://www.google.com.ua">
+        <div class="first-link"></div>
+    </a>
+
+    <a style="color: gray;" target="_blank" href="https://www.yahoo.com">
+        <div class="second-link"></div>
+    </a>
+</body>
+</html>

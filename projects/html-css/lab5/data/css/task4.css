@@ -1,0 +1,133 @@
+/*
+Коментарии для чайников(Ильи)
+Сайт сделан на лучшем php который был разработан на css с помощю рабов(Ильи) и python 
+1. Если у вас запустилось поздравляю вы Еблан.
+2. Если это запускает Илья, то это говно код.
+3. Если вам что-то не понятно, что как тут роботает, удалите этот код(Говно код) и идите играть в кс
+*/
+body{
+    background-color: black;
+}
+
+header {
+    margin-top: 200px;
+}
+
+.dws-menu *{
+    margin: 0;
+    padding: 0;
+}
+
+.dws-menu ul,
+.dws-menu ol {
+    list-style: none;
+}
+
+.dws-menu > ul {
+    display: flex;
+    justify-content: center;
+}
+
+
+.dws-menu > ul li a{
+    display: block;
+    background-color: #333a3f;
+    padding: 15px 30px 15px 40px;
+    font-size: 15px;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    /* Перехід оголошений на самому пункті, а не на :hover. Коли він стоїть
+       усередині :hover, анімація грає лише на вході, а при відведенні курсора
+       колір відвалюється миттєво — згасання не було взагалі. */
+    transition: background-color 0.18s ease;
+}
+
+
+/* Подсветка */
+.dws-menu li a:hover{
+    background: #2c5775;
+}
+
+/* Home подсветка */
+.dws-menu ul li a.home {
+    background: #3194db;
+}
+
+/*Удлинение контакт*/
+.dws-menu ul li a.contact {
+    padding: 15px 120px 15px 10px;
+}
+
+.dws-menu ul li a.pcontact{
+    width: 191px;
+}
+
+.dws-menu ul li ul li a.liprod2{
+    top: 37px;
+    position: relative;
+}
+
+.dws-menu ul li ul li a.ulprod{
+    width: 141px;
+}
+
+.dws-menu ul li a.about{
+    width: 70px;
+}
+
+.dws-menu ul li ul li a.lab{
+    width: 191px;
+    right:-71px;
+    position: relative;
+}
+
+nav ul ul ul{
+    display: block;
+}
+
+/* Продукты 
+.dws-menu ul li a.{
+
+}
+*/
+
+/* Подсветка ul  */
+.dws-menu li > ul li a{
+    padding: 10px;
+    text-transform: none;
+    background: #0183df;
+}
+
+.dws-menu li ul{
+    position: absolute;
+    min-width: 140px;
+    display: none;
+}
+
+.dws-menu li > ul li ul{
+    position: absolute;
+    right: -140px;
+    top: 0px;
+}
+
+.dws-menu li:hover >ul{
+    display: block;
+}
+
+/* .dws-menu ul li ul  > ul li ul{
+    position: absolute;
+    right: -140px;
+    top: 0px;
+} */
+
+.dws-menu ul li a.pabout{
+    width: 120px;
+}
+
+/* .dws-menu ul li ul li ul li a.acc{
+    width: 1000px;
+} */
+
+li > a:after {content:  ' +'; }
+		li > a:only-child:after { content: ''; }

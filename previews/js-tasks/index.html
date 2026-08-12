@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Завдання лабораторних — оболонка</title>
+<style>
+  :root {
+    --paper:#e7e7e1; --print:#fcfbf8; --ink:#14171a; --ink-2:#585f66; --ink-3:#8b9198;
+    --rule:#c6c7c0; --rule-soft:#d9d9d3; --stamp:#5b3e8e; --stamp-bg:rgba(91,62,142,.09);
+    --ok:#2f6f43; --err:#8c3535;
+    --serif:"Hoefler Text","Iowan Old Style",Charter,Georgia,serif;
+    --sans:"Segoe UI",-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --mono:"Cascadia Mono","SF Mono",Consolas,"Liberation Mono",monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#131519; --print:#1b1e24; --ink:#e8e9ec; --ink-2:#969da6; --ink-3:#6d747c;
+      --rule:#2b3038; --rule-soft:#23272e; --stamp:#ae92e8; --stamp-bg:rgba(174,146,232,.13);
+      --ok:#6fbf88; --err:#e08b8b;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 var(--sans);
+       height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  .meta{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+
+  .bar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+       padding:12px 22px;border-bottom:1px solid var(--ink);flex-wrap:wrap}
+  .bar h1{margin:0;font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:-.01em}
+  .ghost{border:1px solid var(--rule);background:transparent;color:var(--ink-2);text-decoration:none;
+         padding:6px 13px;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+         text-transform:uppercase;cursor:pointer;white-space:nowrap}
+  .ghost:hover{border-color:var(--stamp);color:var(--stamp)}
+
+  .body{flex:1;display:flex;min-height:0}
+
+  .list{width:214px;flex:0 0 214px;border-right:1px solid var(--rule);overflow-y:auto;
+        padding:16px 12px;background:var(--print)}
+  .list p{margin:0 0 8px 4px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+  .list button{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;
+    border:0;background:none;color:var(--ink-2);font:inherit;font-size:14px;text-align:left;
+    padding:7px 6px;cursor:pointer;border-bottom:1px solid var(--rule-soft)}
+  .list button:hover{color:var(--ink);background:var(--paper)}
+  .list button[aria-current="true"]{color:var(--stamp);font-weight:600;background:var(--stamp-bg)}
+  .list .file{font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+
+  /* У кадрі архіву список завдань веде оболонка — свій ховаємо, щоб не стояли
+     два однакові поруч. Клас вішає скрипт, коли бачить, що сидить у кадрі. */
+  body.embedded .list{display:none}
+
+  /* Головна колонка: діалог росте вгору, поле вводу завжди внизу під рукою. */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+  .head{flex:0 0 auto;padding:20px 26px 14px;border-bottom:1px solid var(--rule-soft)}
+  .head h2{margin:0 0 4px;font-family:var(--serif);font-size:22px;font-weight:400}
+  .head p{margin:0;color:var(--ink-3);font-size:12.5px;max-width:70ch}
+  .head code{font-family:var(--mono);font-size:12px}
+
+  .talk{flex:1;overflow-y:auto;padding:20px 26px 8px;min-height:0}
+  .talk-inner{max-width:76ch;margin:0 auto}
+
+  .turn{margin-bottom:14px}
+  .turn .who{font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+              color:var(--ink-3);margin-bottom:3px}
+  .turn .say{white-space:pre-wrap;word-break:break-word}
+
+  .turn.out .say{border-left:2px solid var(--ok);padding-left:14px;font-family:var(--mono);font-size:13px}
+  .turn.ask .say{border-left:2px solid var(--rule);padding-left:14px;color:var(--ink-2);font-size:14px}
+  .turn.ask .said{font-family:var(--mono);font-size:13px;color:var(--stamp);margin-top:3px}
+  .turn.err .say{border-left:2px solid var(--err);padding-left:14px;color:var(--err);
+                 font-family:var(--mono);font-size:12.5px}
+  .turn.done .say{border-left:2px solid var(--rule-soft);padding-left:14px;color:var(--ink-3);font-size:13px}
+
+  .ask-now{flex:0 0 auto;border-top:1px solid var(--rule);background:var(--print);padding:14px 26px 16px}
+  .ask-inner{max-width:76ch;margin:0 auto}
+  .ask-now label{display:block;margin-bottom:8px;font-size:14.5px;white-space:pre-wrap}
+  .ask-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .ask-row input{flex:1;min-width:180px;padding:9px 12px;border:1px solid var(--rule);
+    background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:14px}
+  .ask-row input:focus{outline:2px solid var(--stamp);outline-offset:1px}
+  .ask-row button.go{border:1px solid var(--stamp);background:var(--stamp-bg);color:var(--stamp);
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+    padding:9px 20px;cursor:pointer}
+  .ask-row button.go:hover{background:var(--stamp);color:var(--print)}
+
+  .done-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .done-row span{color:var(--ink-3);font-size:13.5px;margin-right:4px}
+
+  .code{flex:0 0 auto;border-top:1px solid var(--rule);background:var(--print);max-height:44vh;
+        display:flex;flex-direction:column}
+  .code summary{padding:11px 26px;cursor:pointer;list-style:none;font-family:var(--mono);
+                font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .code summary::-webkit-details-marker{display:none}
+  .code summary:hover{color:var(--stamp)}
+  .code pre{margin:0;padding:0 26px 20px;overflow:auto;font-family:var(--mono);font-size:12px;
+            line-height:1.7;tab-size:4;white-space:pre}
+
+  @media (max-width:800px){
+    .body{flex-direction:column}
+    .list{width:auto;flex:0 0 auto;max-height:132px;border-right:0;border-bottom:1px solid var(--rule)}
+    .head,.talk,.ask-now{padding-left:18px;padding-right:18px}
+    .code summary,.code pre{padding-left:18px;padding-right:18px}
+  }
+</style>
+</head>
+<body>
+
+  <div class="bar">
+    <h1 id="lab-title"></h1>
+    <a class="ghost" id="legacy-all" href="#" target="_blank" rel="noopener">Оригінальне меню</a>
+  </div>
+
+  <div class="body">
+    <nav class="list" id="list"><p class="meta">Завдання</p></nav>
+
+    <main class="main">
+      <div class="head">
+        <h2 id="task-title"></h2>
+        <p id="task-lede"></p>
+      </div>
+
+      <div class="talk"><div class="talk-inner" id="talk"></div></div>
+
+      <div class="ask-now">
+        <div class="ask-inner" id="ask"></div>
+      </div>
+
+      <details class="code">
+        <summary>Вихідний код</summary>
+        <pre id="src"></pre>
+      </details>
+    </main>
+  </div>
+
+<script src="../../assets/sources.js"></script>
+<script>
+/*
+ * Оболонка для завдань, написаних на prompt() і alert().
+ *
+ * Код завдань НЕ переписаний. Оригінальний .js підключається як є, у прихований
+ * iframe, а перед ним підставляються власні prompt і alert.
+ *
+ * Спершу відповіді вводилися всі одразу, списком. Це збивало: скільки саме
+ * відповідей знадобиться, наперед не знає ніхто — програма може спитати ще, а
+ * може завершитись. Тому діалог іде так, як його й писали: одне питання — одне
+ * поле вводу під ним. Відповіді накопичуються, і на кожен крок програма
+ * переграється з початку з усім списком.
+ *
+ * Чому не можна просто повернути null, коли відповіді скінчились: цикли тут
+ * написані як while (userChoose != 0) і while (userChoose != "N"). З null умова
+ * лишиться істинною назавжди і вкладка зависне. Тому виконання обривається,
+ * а питання, що лишилось без відповіді, показується користувачу.
+ */
+(function () {
+  'use strict';
+
+  var SOURCES = window.SOURCES || {};
+
+  var LABS = {
+    '1': {
+      title: 'Лабораторна №1 — Функції',
+      menu: '../../projects/js/lab1/index.html',
+      base: '../../projects/js/lab1/',
+      key: 'projects/js/lab1/',
+      tasks: [
+        { n: 'Завдання 1', js: 'data/function/task1.js',  page: 'data/source/first.html' },
+        { n: 'Завдання 2', js: 'data/function/_task2.js', page: 'data/source/second.html' },
+        { n: 'Завдання 3', js: 'data/function/task3.js',  page: 'data/source/third.html' },
+        { n: 'Завдання 4', js: 'data/function/task4.js',  page: 'data/source/fourth.html' },
+        { n: 'Завдання 5', js: 'data/function/task5.js',  page: 'data/source/fiveth.html' },
+        { n: 'Завдання 6', js: 'data/function/task6.js',  page: 'data/source/sixth.html' },
+        { n: 'Завдання 7', js: 'data/function/task7.js',  page: 'data/source/seventh.html' }
+      ]
+    },
+    '2': {
+      title: 'Лабораторна №2 — Дев’ять завдань',
+      menu: '../../projects/js/lab2/index.html',
+      base: '../../projects/js/lab2/',
+      key: 'projects/js/lab2/',
+      tasks: [
+        { n: 'Task 1.1',     js: 'source/func/task1.1.js',    page: 'source/www/task1.1.html' },
+        { n: 'Task 1.2',     js: 'source/func/task1.2.js',    page: 'source/www/task1.2.html' },
+        { n: 'Task 1.3',     js: 'source/func/task1.3.js',    page: 'source/www/task1.3.html' },
+        { n: 'Task 1.4',     js: 'source/func/task1.4.js',    page: 'source/www/task1.4.html' },
+        { n: 'Task 1.5',     js: 'source/func/task1.5.js',    page: 'source/www/task1.5.html' },
+        { n: 'Task 2.1–2.2', js: 'source/func/_task2.1-2.js', page: 'source/www/task2.1-2.html' },
+        { n: 'Task 2.3',     js: 'source/func/task2.3.js',    page: 'source/www/task2.3.html' },
+        { n: 'Task 3.1',     js: 'source/func/task3.1.js',    page: 'source/www/task3.1.html' },
+        { n: 'Task 3.2',     js: 'source/func/task3.2.js',    page: 'source/www/task3.2.html' }
+      ]
+    }
+  };
+
+  var labId = (location.search.match(/[?&]lab=([12])/) || [])[1] || '1';
+  var lab = LABS[labId];
+  var current = 0;
+  var answers = [];
+  var running = null;
+
+  var listEl = document.getElementById('list');
+  var talkEl = document.getElementById('talk');
+  var askEl = document.getElementById('ask');
+  var srcEl = document.getElementById('src');
+
+  document.getElementById('lab-title').textContent = lab.title;
+  document.getElementById('legacy-all').href = lab.menu;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /*
+   * Де ми зараз опинилися.
+   *
+   * Раніше це визначалося через window.frameElement — і працювало рівно доти,
+   * доки архів відкрито через сервер. З диска (file://) кожен документ дістає
+   * власне походження, звернення до frameElement кидає помилку, і сторінка
+   * вважала кадром навіть збільшений. Тому тепер жодних звернень до батьківського
+   * документа: чи ми в кадрі взагалі — видно з window.parent, а що це саме
+   * збільшений кадр, а не мініатюра, каже сама оболонка повідомленням.
+   */
+  var framed = window.parent !== window.self;
+  var embedded = false;              // оболонка підтвердила: це збільшений кадр
+
+  /*
+   * У мініатюрі фокус забирати не можна: браузер тягне за ним прокрутку всього
+   * аркуша, і той сам собою від'їжджає вниз. У збільшеному кадрі фокус доречний,
+   * але теж без прокручування — сторінку архіву смикати нема за що.
+   */
+  function takeFocus(el) {
+    if (!el) return;
+    if (!framed) { el.focus(); return; }
+    if (embedded) el.focus({ preventScroll: true });
+  }
+
+  // ---------- список завдань ----------
+
+  lab.tasks.forEach(function (t, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span>' + esc(t.n) + '</span><span class="file">' +
+      esc(t.js.split('/').pop()) + '</span>';
+    b.addEventListener('click', function () { select(i); });
+    listEl.appendChild(b);
+  });
+
+  function select(i) {
+    current = i;
+    answers = [];
+    Array.prototype.forEach.call(listEl.querySelectorAll('button'), function (b, k) {
+      b.setAttribute('aria-current', String(k === i));
+    });
+
+    var t = lab.tasks[i];
+    document.getElementById('task-title').textContent = t.n;
+    document.getElementById('task-lede').innerHTML =
+      'Працює оригінальний <code>' + esc(t.js.split('/').pop()) +
+      '</code> без жодних змін — перехоплено лише ввід і вивід.';
+
+    showSource(t);
+    run();
+  }
+
+  // ---------- запуск оригінального коду ----------
+
+  function run() {
+    var shim =
+      '(function(){var A=' + JSON.stringify(answers) + ',i=0,log=[],done=false;' +
+      'function send(e){if(done)return;done=true;parent.postMessage({__tasks:1,log:log,error:e||null},"*");}' +
+      'window.prompt=function(q){if(i>=A.length){log.push({t:"pending",q:String(q)});send("need-more");' +
+        'throw new Error("__NEED_MORE__");}var a=A[i++];log.push({t:"ask",q:String(q),a:a});return a;};' +
+      'window.alert=function(m){log.push({t:"out",m:String(m)});' +
+        'if(log.length>3000){send("too-much");throw new Error("__TOO_MUCH__");}};' +
+      'window.confirm=function(q){log.push({t:"out",m:String(q)});return true;};' +
+      'window.onerror=function(m){m=String(m);' +
+        'if(m.indexOf("__NEED_MORE__")>=0||m.indexOf("__TOO_MUCH__")>=0){return true;}' +
+        'log.push({t:"err",m:m});send("runtime");return true;};' +
+      'window.addEventListener("load",function(){send(null);});})();';
+
+    if (running) { running.remove(); running = null; }
+
+    var frame = document.createElement('iframe');
+    frame.setAttribute('aria-hidden', 'true');
+    frame.style.cssText = 'position:absolute;width:0;height:0;border:0;visibility:hidden';
+    // ?v= — щоб браузер не підсунув стару копію файлу завдання з кешу
+    frame.srcdoc = '<!DOCTYPE html><meta charset="utf-8">' +
+      '<script>' + shim + '<\/script>' +
+      '<script src="' + esc(lab.base + lab.tasks[current].js) + '?v=' + Date.now() + '"><\/script>';
+    running = frame;
+    document.body.appendChild(frame);
+  }
+
+  window.addEventListener('message', function (e) {
+    if (!e.data || !e.data.__tasks) return;
+    if (running) { running.remove(); running = null; }
+    render(e.data.log, e.data.error);
+  });
+
+  // ---------- діалог ----------
+
+  function render(log, error) {
+    var html = '';
+    var pending = null;
+
+    log.forEach(function (it) {
+      if (it.t === 'out') {
+        html += turn('out', 'Програма', esc(it.m));
+      } else if (it.t === 'ask') {
+        html += '<div class="turn ask"><div class="who">Питання</div><div class="say">' +
+          esc(it.q) + '<div class="said">' + esc(it.a) + '</div></div></div>';
+      } else if (it.t === 'pending') {
+        pending = it.q;
+      } else if (it.t === 'err') {
+        html += turn('err', 'Помилка', esc(it.m));
+      }
+    });
+
+    var syntax = log.some(function (it) { return it.t === 'err' && /SyntaxError/.test(it.m); });
+
+    if (syntax) {
+      html += turn('done', '', 'Файл не вдалося навіть розібрати — помилка в самому коді завдання, ' +
+        'а не в оболонці. Оригінальна сторінка з цим файлом так само відкривається порожньою.');
+    } else if (error === 'too-much') {
+      html += turn('done', '', 'Виконання зупинено: забагато виводу. Схоже на нескінченний цикл.');
+    } else if (!error && !pending) {
+      html += turn('done', '', 'Програма завершилась.');
+    }
+
+    talkEl.innerHTML = html || '<p class="meta">Програма нічого не вивела</p>';
+    talkEl.parentNode.scrollTop = talkEl.parentNode.scrollHeight;
+
+    askEl.innerHTML = '';
+    if (pending) askForAnswer(pending);
+    else finished();
+
+    function turn(cls, who, text) {
+      return '<div class="turn ' + cls + '">' +
+        (who ? '<div class="who">' + who + '</div>' : '') +
+        '<div class="say">' + text + '</div></div>';
+    }
+  }
+
+  function askForAnswer(question) {
+    askEl.innerHTML =
+      '<label for="ans">' + esc(question) + '</label>' +
+      '<div class="ask-row">' +
+        '<input id="ans" autocomplete="off" spellcheck="false" placeholder="ваша відповідь">' +
+        '<button class="go" type="button" id="send">Відповісти</button>' +
+        (answers.length ? '<button class="ghost" type="button" id="restart">Спочатку</button>' : '') +
+      '</div>';
+
+    var input = document.getElementById('ans');
+    function submit() {
+      answers.push(input.value);
+      run();
+    }
+    document.getElementById('send').addEventListener('click', submit);
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+    var rs = document.getElementById('restart');
+    if (rs) rs.addEventListener('click', restart);
+    takeFocus(input);
+  }
+
+  function finished() {
+    askEl.innerHTML =
+      '<div class="done-row">' +
+        '<span>Діалог завершено.</span>' +
+        '<button class="ghost" type="button" id="restart">Пройти ще раз</button>' +
+        '<a class="ghost" href="' + esc(lab.base + lab.tasks[current].page) +
+          '" target="_blank" rel="noopener">Оригінал з діалогами</a>' +
+      '</div>';
+    document.getElementById('restart').addEventListener('click', restart);
+  }
+
+  function restart() {
+    answers = [];
+    run();
+  }
+
+  // ---------- вихідний код ----------
+
+  function showSource(t) {
+    var key = lab.key + t.js;
+    if (Object.prototype.hasOwnProperty.call(SOURCES, key)) {
+      srcEl.textContent = SOURCES[key];
+      return;
+    }
+    // запасний шлях, якщо вбудовані вихідники не підвантажились
+    srcEl.textContent = 'Завантаження…';
+    fetch(lab.base + t.js)
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
+      .then(function (text) { srcEl.textContent = text; })
+      .catch(function () { srcEl.textContent = 'Не вдалося прочитати ' + t.js; });
+  }
+
+  select(0);
+
+  /*
+   * Рукостискання з оболонкою.
+   *
+   * Ми озиваємось у будь-який кадр — і у збільшений, і в мініатюру на аркуші, бо
+   * зсередини їх не розрізнити (з диска до батьківського документа не дотягтися).
+   * Відповідає лише збільшений: він один показує список завдань у своїй лівій
+   * колонці. Після його «embed» ховаємо власну колонку, щоб не стояли дві поруч,
+   * і далі слухаємо, яке завдання вибрали.
+   *
+   * Мініатюра мовчить — там усе лишається як є, це просто живий знімок сторінки.
+   */
+  if (framed) {
+    parent.postMessage({
+      __port: 'hello',
+      current: current,
+      tasks: lab.tasks.map(function (t) {
+        return { n: t.n, file: t.js.split('/').pop() };
+      })
+    }, '*');
+
+    window.addEventListener('message', function (e) {
+      var m = e.data;
+      if (!m) return;
+
+      if (m.__port === 'embed') {
+        embedded = true;
+        document.body.classList.add('embedded');
+        takeFocus(document.getElementById('ans'));
+        return;
+      }
+
+      if (m.__port === 'select' && typeof m.index === 'number' && lab.tasks[m.index]) {
+        select(m.index);
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

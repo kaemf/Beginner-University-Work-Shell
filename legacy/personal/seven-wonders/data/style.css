@@ -1,0 +1,167 @@
+body{background: linear-gradient(90deg, #ffd1d4, #ff9b9f, #480bf7);}
+a{text-decoration: none; font-size: 20px;}
+a:hover{text-decoration: line-through;}
+
+.flex-main-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    display: flex;
+    background: white;
+    justify-content: center;
+    align-items: center;
+    margin-top: -25px;
+    width: 60%;
+    height: 150px;
+    border-radius: 20px;
+    font-size: 80px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    box-shadow: 0px 2px 10px 0.5px black;
+}
+div.title::before{content: "7 ЧУДЕС УКРАЇНИ"}
+
+.title-content{
+    margin: 20px auto;
+    display: flex;
+    text-align: center;
+    order: 1;
+}
+
+.container-content{
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    background: white;
+    width: 60%;
+    height: 100%;
+    border-radius: 20px;
+    font-size: xx-large;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    box-shadow: 0px 2px 10px 0.5px black;
+}
+
+.flex-content{
+    display: flex;
+    order: 2;
+    height: 100%;
+}
+
+.flex-column{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    order: 2;
+    margin-left: 10px;
+}
+
+.img{
+    order: 1;
+    height: 100%;
+    width: 50%;
+    margin: 0 10px;
+    transition: all .3s ease;
+    border-radius: 10px;
+    transition: all .3s ease;
+}
+
+img{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.link{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    height: 40%;
+}
+
+.text-content{
+    display: flex;
+    width: 75%;
+    height: 100%;
+    font-size: 25px;
+}
+
+.end{
+    height: 70px;
+    font-size: 20px;
+    margin-bottom: -10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.author{
+    order: 2;
+}
+
+.copyright{
+    width: 6%;
+    margin: 0 10px;
+    order: 1;
+}
+.copyright:hover{
+    transform: translate(0);
+}
+
+.date{
+    align-content: end;
+    margin-left: auto;
+    margin-right: 20px;
+    order: 3;
+}
+
+.author::before{
+    content: "Junior Fullstack Developer YAROSLAV VOLKIVSKYI";
+}
+.date::before{
+    content: attr(year);
+}
+
+#overlay{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .3s ease;
+    opacity: 0;
+}
+  
+#modal{
+    transition: all .3s ease;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    transform: scale(0);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#modal-img{
+    transition: all .3s ease;
+    width: 100%;
+    cursor: zoom-in;
+}
+
+#modal h2{
+    text-align: center;
+    margin-top: 0;
+}

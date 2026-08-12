@@ -1,0 +1,298 @@
+/* Лабораторна №5, частина 6 — «Наші випускники»
+ *
+ * Редизайн. Розмітка авторська й не змінена, порядок сторінки той самий:
+ * шапочка із заголовком і рискою, далі три випускники — фото, цитата, підпис,
+ * посада. Авторський макет 2023 року лежить поряд, у legacy/, і в оболонці
+ * вмикається кнопкою «Оригінал».
+ *
+ * Що зроблено інакше:
+ *   — полотно стало карткою: заокруглення й м'яка тінь замість прямокутника;
+ *   — риска під заголовком — короткий градієнтний штрих у колір фону;
+ *   — підпис і посада зведені під цитату, як у звичайному відгуку, а не
+ *     рознесені по різних колонках;
+ *   — лапки виросли й пригасли — тепер це водяний знак, а не значок у рядку;
+ *   — рядки випускників розділені волосяною лінією замість порожнечі.
+ *
+ * Рух: поява з наростанням по рядках при завантаженні, наведення підсвічує
+ * рядок, збільшує фото й проявляє лапки. Усе це вимикається, якщо в системі
+ * стоїть «зменшити рух».
+ */
+
+body {
+  --sheet: min(1080px, 100% - 48px);
+  --pad: clamp(20px, 3vw, 44px);
+  --top: 34px;                       /* смужка градієнта над карткою */
+  --title: clamp(24px, 2.6vw, 36px);
+  --cap: calc(var(--title) * 1.55);  /* шапочка міряється від заголовка */
+  --accent: #5b4ffc;
+  --accent-2: #df0253;
+
+  position: relative;
+  margin: 0;
+  padding: var(--top) 0 64px;
+  color: #2f3238;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  background-color: #fff;
+  background-image: radial-gradient(circle at 50% 28%, #5b4ffc, #df0253);
+  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* <p><h1>…</h1></p> браузер розбирає на порожній абзац, заголовок і ще один
+   порожній абзац. Ці двоє нічого не несуть, лишились би тільки їхні відступи. */
+body > p { display: none; }
+
+/* Полотно, що в оригіналі стояло за текстом із z-index: -1. */
+img.back {
+  position: absolute;
+  top: var(--top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--sheet);
+  height: calc(100% - var(--top) - 64px);
+  z-index: -1;
+  border-radius: 22px;
+  box-shadow: 0 34px 90px rgba(24, 0, 48, 0.3);
+}
+
+/* ---- шапка ---- */
+
+h1,
+body > div {
+  width: var(--sheet);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+  box-sizing: border-box;
+}
+
+h1 {
+  padding-top: 44px;
+  padding-left: calc(var(--pad) + var(--cap) + 20px);   /* місце під шапочку */
+  font-size: var(--title);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #221f38;
+}
+
+/* Шапочка лежить у наступному блоці, а стояти мусить поруч із заголовком —
+   тому вона єдина абсолютна. По вертикалі прив'язана до середини рядка
+   заголовка (0.575 — половина line-height), по горизонталі — до краю картки. */
+img.main {
+  position: absolute;
+  top: calc(var(--top) + 44px + var(--title) * 0.575 - var(--cap) / 2);
+  left: calc(50% - var(--sheet) / 2 + var(--pad));
+  width: var(--cap);
+  height: var(--cap);
+  object-fit: contain;
+}
+
+hr {
+  width: 76px;
+  height: 4px;
+  margin: 22px 0 0 calc(var(--cap) + 20px);
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+body > div:first-of-type { padding-bottom: 30px; }
+
+/* ---- випускник ---- */
+
+body > div:nth-of-type(n + 2) {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  column-gap: clamp(24px, 3.4vw, 52px);
+  align-items: start;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  transition: background-color 0.4s ease;
+}
+
+body > div:nth-of-type(n + 3) { border-top: 1px solid rgba(30, 20, 60, 0.09); }
+
+/* Останній рядок упирається в низ картки — щоб підсвітка не зрізала кут. */
+body > div:last-of-type { border-radius: 0 0 22px 22px; }
+
+body > div:nth-of-type(n + 2):hover { background-color: rgba(91, 79, 252, 0.045); }
+
+/* фото */
+body > div:nth-of-type(n + 2) > img {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  align-self: start;
+  width: 132px;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px #fff, 0 12px 28px rgba(40, 0, 70, 0.16);
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.4s ease;
+}
+
+body > div:nth-of-type(n + 2):hover > img {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 6px #fff, 0 18px 36px rgba(40, 0, 70, 0.22);
+}
+
+/* Жорсткі переноси прибрані: вони були розставлені під одну ширину рядка і на
+   будь-якій іншій рвали текст на короткі уривки. */
+body > div:nth-of-type(n + 2) br { display: none; }
+
+/* цитата */
+body > div:nth-of-type(n + 2) > p:nth-of-type(1) {
+  grid-column: 2;
+  grid-row: 1;
+  position: relative;
+  max-width: 62ch;
+  margin: 0 0 24px;
+  font-size: clamp(15px, 1.2vw, 16.5px);
+  line-height: 1.75;
+}
+
+/* підпис */
+body > div:nth-of-type(n + 2) > p:nth-of-type(2) {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0 0 5px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4a2fa6;
+}
+
+body > div:nth-of-type(n + 2) > p:nth-of-type(2) strong { font-weight: 400; }
+
+/* посада */
+body > div:nth-of-type(n + 2) > center {
+  grid-column: 2;
+  grid-row: 3;
+  text-align: left;
+}
+
+body > div:nth-of-type(n + 2) > center p {
+  margin: 0;
+  max-width: 56ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #6d737b;
+}
+
+/* Лапки: великі й пригашені, по кутах цитати. */
+img.fquote-m,
+img.squote-m {
+  position: absolute;
+  width: clamp(34px, 3.2vw, 46px);
+  height: auto;
+  opacity: 0.1;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+img.fquote-m { left: -16px; top: -20px; transform: rotate(180deg); }
+img.squote-m { right: -8px; bottom: -14px; }
+
+body > div:nth-of-type(n + 2):hover img.fquote-m,
+body > div:nth-of-type(n + 2):hover img.squote-m { opacity: 0.2; }
+
+/* ---- поява ---- */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes cap-in {
+  from { opacity: 0; transform: translateY(-14px) rotate(-10deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Блок шапки не анімуємо: у ньому лежать полотно й шапочка, і transform на
+   ньому зробив би його їхнім контейнером — обидві поїхали б із місця. */
+h1  { animation: rise 0.7s cubic-bezier(0.22, 0.68, 0.3, 1) 0.05s both; }
+hr  { animation: rise 0.7s cubic-bezier(0.22, 0.68, 0.3, 1) 0.16s both; }
+img.main { animation: cap-in 0.8s cubic-bezier(0.22, 0.9, 0.3, 1) 0.02s both; }
+
+body > div:nth-of-type(n + 2) { animation: rise 0.75s cubic-bezier(0.22, 0.68, 0.3, 1) both; }
+body > div:nth-of-type(2) { animation-delay: 0.26s; }
+body > div:nth-of-type(3) { animation-delay: 0.38s; }
+body > div:nth-of-type(4) { animation-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  h1,
+  hr,
+  img.main,
+  body > div:nth-of-type(n + 2) { animation: none; }
+
+  body > div:nth-of-type(n + 2),
+  body > div:nth-of-type(n + 2) > img,
+  img.fquote-m,
+  img.squote-m { transition: none; }
+
+  body > div:nth-of-type(n + 2):hover > img { transform: none; }
+}
+
+/* ---- вузькі екрани ---- */
+
+@media (max-width: 680px) {
+  body > div:nth-of-type(n + 2) {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 32px;
+    padding-bottom: 32px;
+    text-align: center;
+  }
+
+  /* grid-column: 1 треба повторити кожному. Якщо лишити комусь другу колонку
+     з широкої розкладки, сітка добудує її наново, перша схлопнеться в нуль — і
+     фото поїде за край картки. Селектори тут ті самі, що й вище, бо @media не
+     додає ваги: коротший селектор програв би тому, що вже стоїть. */
+  body > div:nth-of-type(n + 2) > img {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    width: 112px;
+    height: 112px;
+    margin-bottom: 20px;
+  }
+
+  body > div:nth-of-type(n + 2) > p:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: none;
+    padding: 0 6px;
+  }
+
+  body > div:nth-of-type(n + 2) > p:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  body > div:nth-of-type(n + 2) > center {
+    grid-column: 1;
+    grid-row: 4;
+    text-align: center;
+  }
+
+  body > div:nth-of-type(n + 2) > center p { max-width: none; }
+
+  img.fquote-m { left: -4px; top: -14px; }
+  img.squote-m { right: -4px; bottom: -10px; }
+
+  /* Шапочка стає над заголовком, обоє по центру. Центруємо полем, а не
+     transform: його забирає анімація появи. */
+  img.main {
+    top: var(--top);
+    left: 50%;
+    margin-left: calc(var(--cap) / -2);
+  }
+
+  h1 {
+    padding-left: var(--pad);
+    padding-top: calc(var(--cap) + 14px);
+    text-align: center;
+  }
+
+  hr { margin-left: auto; margin-right: auto; }
+}

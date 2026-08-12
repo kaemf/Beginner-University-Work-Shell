@@ -1,0 +1,157 @@
+body{
+    margin: 0rem;
+}
+
+.conteiner {
+    height: 40rem;
+    width: 78.6rem;
+    background-color: #0183df;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    margin-left: 21.4rem;
+    margin-right: 21.4rem;
+    margin-top: 10rem;
+}
+
+.logo {
+    position: absolute;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    color: white;
+    margin-top: 6.666666rem;
+    margin-left: 6rem;
+    line-height: 0.9rem;
+}
+
+.logo_text {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    font-size: .8rem;
+    text-transform: uppercase;
+    color: white;
+}
+
+.main_text {
+    color: white;
+    display: flex;
+    margin-top: 6.666666rem;
+    position: absolute;
+    margin-left: 18rem;
+    margin-right: 6rem;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: white;
+}
+
+.text_main {
+    margin-right: 4rem;
+}
+
+.text_main1 {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: white;
+}
+
+.conteiner1 {
+    margin-left: 6rem;
+    margin-right: 6rem;
+}
+
+.input_text {
+    background: transparent;
+    border: #fff 0.066rem solid;
+    padding: 0.7rem;
+    border-radius: 1.666rem;
+}
+
+.enter_email {
+    margin-left: 41rem;
+    margin-top: 12rem;
+    position: absolute;
+}
+
+.sub_button {
+    background-color: #fff;
+    border: none;
+    padding: 0.5rem;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: white;
+    border-radius: 1.2rem;
+    text-decoration: none;
+}
+
+.link_button {
+    text-decoration: none;
+    color:black ;
+}
+
+.button_sub {
+    margin-left: 41rem;
+    margin-top: 15rem;
+    position: absolute;
+}
+
+.line {
+    background-color: #fff;
+    height: 0.066rem;
+    margin-top: 34rem;
+    position: absolute;
+    margin-right: 6rem;
+    width: 66rem;
+}
+
+.nav {
+    position: absolute;
+    margin-top: 36rem;
+}
+
+.nav_link {
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: white;
+    text-decoration: none;
+    margin-right: 0.7rem;
+}
+
+.text_bottom {
+    position: absolute;
+    margin-top: 36.5rem;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: white;
+    opacity: 0.8;
+}
+
+::placeholder{
+    color: #fff;
+}
+
+img.icon{
+    height: 20%;
+    width: 10%;
+    position: relative;
+    left:1000px;
+    top: 510px;
+}

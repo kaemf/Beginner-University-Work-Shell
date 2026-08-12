@@ -1,0 +1,80 @@
+.mainBlock {
+    background-color: #FF8904;
+}
+
+ol li {
+    list-style: none;
+}
+
+ol li:before {
+    content: "";
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: center;
+    top:2px;
+}
+
+li:first-child:before {
+    background-image: url("../add/apple.png");
+    top:2px;
+    position: relative;
+}
+
+li:nth-child(2):before {
+    position: relative;
+    background-image: url("../add/klubnika.png");
+    left: 5px;
+}
+
+li:nth-child(3):before {
+    background-image: url("../add/kiwi.png");
+    position: relative;
+    top: 5px;
+    left: 1px;
+
+}
+
+li:nth-child(4):before {
+    background-image: url("../add/granate.png");
+    position: relative;
+    left: 4px;
+    top: 2px;
+}
+
+li:nth-child(5):before {
+    background-image: url("../add/mango.png");
+    position: relative;
+    left: 4px;
+    top: 3px;
+}
+
+li {
+    margin-bottom: 10px;
+    background-color: #BBB76B;
+    margin-left: -20px;
+    margin-right: 22px;
+}
+
+div {
+    padding: 1px;
+}
+
+li:first-child {
+    margin-top: 25px;
+}
+
+li:last-child {
+    margin-bottom: 25px;
+}
+
+span {
+    font-size: 18px;
+    color: white;
+    background-color: #CF8440;
+    vertical-align: 8px;
+    padding: 4px 15px 8px;
+    margin-left: 2px;
+}

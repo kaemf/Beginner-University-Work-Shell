@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beginner University Work Shell</title>
+  <meta name="description" id="meta-description" content="Архів навчальних та особистих веброзробок 2022–2023.">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="shell">
+      <div class="masthead-row">
+        <h1 class="wordmark" id="wordmark">Beginner University Work Shell</h1>
+        <div class="masthead-side">
+          <div class="colophon meta">
+            <div id="colophon-counts"></div>
+            <div>ІПЗ-21-5 &middot; 2022&ndash;2023</div>
+            <div><a id="colophon-github" href="#">github.com/kaemf</a></div>
+          </div>
+          <div class="masthead-tools">
+            <button class="lang-toggle" id="lang-toggle" type="button"></button>
+            <button class="theme-toggle" id="theme-toggle" type="button">◐</button>
+          </div>
+        </div>
+      </div>
+      <p class="standfirst" id="standfirst"></p>
+    </div>
+  </header>
+
+  <div class="shell layout">
+    <nav class="finding-aid" id="finding-aid">
+      <p class="aid-title meta" data-i18n="aid.title"></p>
+      <ul class="aid-list" id="aid"></ul>
+      <div class="aid-foot meta">
+        <div><a href="HISTORY.md" data-i18n="aid.history"></a></div>
+        <div><a href="README.md" data-i18n="aid.readme"></a></div>
+      </div>
+    </nav>
+
+    <main class="sheet" id="sheet"></main>
+  </div>
+
+  <footer class="colofoot">
+    <div class="shell meta">
+      <div data-i18n="foot.untouched"></div>
+      <div data-i18n="foot.nobuild"></div>
+    </div>
+  </footer>
+
+  <!-- Збільшений кадр -->
+  <div class="plateview" id="plateview" hidden>
+    <div class="pv-bar">
+      <button class="pv-back" id="pv-close" type="button" data-i18n="pv.back"></button>
+      <button class="pv-side-toggle" id="pv-side" type="button" aria-expanded="true">☰</button>
+      <div class="pv-heading">
+        <h2 id="pv-title"></h2>
+        <span class="meta" id="pv-leaf"></span>
+      </div>
+      <div class="pv-variant" id="pv-variant" role="group"></div>
+      <div class="pv-acts" id="pv-acts"></div>
+    </div>
+    <div class="pv-body">
+      <aside class="pv-index" id="pv-index"></aside>
+      <div class="pv-stage" id="pv-stage"></div>
+    </div>
+  </div>
+
+  <script src="assets/i18n.js"></script>
+  <script src="assets/catalog.js"></script>
+  <script src="assets/catalog.en.js"></script>
+  <script src="assets/files.js"></script>
+  <script src="assets/sources.js"></script>
+  <script src="assets/shell.js"></script>
+</body>
+</html>
