@@ -1,7 +1,7 @@
 /** Перелік файлів кожного проєкту. Перегенеровувати разом із sources.js. */
 window.FILES = {
   docs: [
-    { p: "README.md", s: 18863 },
+    { p: "README.md", s: 19115 },
     { p: "HISTORY.md", s: 9819 },
   ],
   projects: {

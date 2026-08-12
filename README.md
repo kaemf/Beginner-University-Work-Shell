@@ -4,7 +4,9 @@
 з оболонкою для перегляду. Раніше все це лежало в чотирьох окремих репозиторіях
 плюс десять вкладених — тепер одна тека, одне меню, один вхід.
 
-**Відкрити:** `index.html` — подвійним кліком, просто з диска. Без збірки,
+### → [kaemf.github.io/Beginner-University-Work-Shell](https://kaemf.github.io/Beginner-University-Work-Shell/)
+
+Або локально: `index.html` подвійним кліком, просто з диска. Без збірки,
 без залежностей, без сервера.
 
 ```
@@ -264,9 +266,12 @@ python -m http.server 8000
 
 ## Публікація
 
-Репозиторій готовий до GitHub Pages як є — Settings → Pages → Deploy from branch,
-корінь гілки. Збірка не потрібна. Поряд лежить робочий процес
-`.github/workflows/deploy.yml`, який публікує теку цілком при пуші в `main`.
+Опубліковано на GitHub Pages:
+**[kaemf.github.io/Beginner-University-Work-Shell](https://kaemf.github.io/Beginner-University-Work-Shell/)**
+
+Репозиторій іде туди як є — Settings → Pages → Deploy from branch, корінь гілки.
+Збірка не потрібна. Поряд лежить робочий процес `.github/workflows/deploy.yml`,
+який публікує теку цілком при пуші в `main`.
 
 **`.gitattributes` тут не формальність.** Усе взято з `* -text`: жодних
 перетворень кінців рядків. У теці 128 файлів із CRLF і 45 із LF — саме так, як їх
